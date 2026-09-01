@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Манай ажлууд — ХАМТ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Main_org_s.css">
+<link rel="stylesheet" href="polish.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <a class="wordmark" href="Intro.html">
+      <img class="wordmark-knot" src="logo-badge.png" alt="ХАМТ лого" width="76" height="76" style="object-fit:contain;">
+      ХАМТ
+    </a>
+
+    <nav class="main-nav" aria-label="Үндсэн цэс">
+      <a class="nav-link is-active" href="Main_org.html">Манай ажлууд</a>
+      <a class="nav-link" href="Busad_ajiluud.html">Бусад сайн дурын ажлууд</a>
+      <a class="nav-link" href="Baiguullaguud_org.html">Байгууллагууд</a>
+      <a class="nav-link" href="Manai_tukhai.html">Манай тухай</a>
+    </nav>
+
+    <div class="topnav-actions">
+      <button class="icon-btn" aria-label="Мэдэгдэл">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M4 7.5a5.5 5.5 0 0 1 11 0c0 3.2 1 4.3 1.5 5H2.5c.5-.7 1.5-1.8 1.5-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 15.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn" id="logoutBtn" aria-label="Гарах" title="Гарах">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M7 2.5H4a1.5 1.5 0 0 0-1.5 1.5v10A1.5 1.5 0 0 0 4 15.5h3M12.5 12.5 16 9l-3.5-3.5M16 9H6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <a class="avatar" href="Manai_tukhai.html" aria-label="Профайл" id="avatarInitials">БГ</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow" id="greeting">Сайн байна уу 👋</p>
+      <h1 class="hero-title">Манай ажлууд</h1>
+      <p class="hero-sub">Байгууллагынхаа нийтэлсэн бүх сайн дурын ажлыг эндээс удирдаарай.</p>
+
+      <button type="button" id="openAddBtn" class="search-bar" style="justify-content:space-between; padding:16px 22px; border:none; width:100%; max-width:760px; cursor:pointer;">
+        <span style="font-weight:700; color:var(--ink); font-size:14.5px;">+ Шинэ сайн дурын ажил нийтлэх</span>
+        <span style="color:var(--ink-soft); font-size:13px;">хэдхэн минутад бэлэн болно →</span>
+      </button>
+
+      <div class="stat-strip">
+        <div class="stat-pill"><strong id="statTotal">–</strong><span>нийтэлсэн ажил</span></div>
+        <div class="stat-pill"><strong id="statActive">–</strong><span>идэвхтэй ажил</span></div>
+        <div class="stat-pill"><strong id="statApplicants">–</strong><span>нийт бүртгүүлсэн</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="content-grid" style="grid-template-areas: 'filters filters' 'feed feed';">
+
+    <div class="filters" role="tablist" aria-label="Ажлын төлөв">
+      <button class="chip is-active" role="tab" aria-selected="true" data-filter="all">Бүгд</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="active">Идэвхтэй</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="completed">Дууссан</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="draft">Ноорог</button>
+    </div>
+
+    <section class="feed" aria-label="Манай ажлын жагсаалт" id="oppFeed" style="grid-area: feed;">
+      <p class="load-state">Ачааллаж байна…</p>
+    </section>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>© 2026 ХАМТ. Сайн дурын ажилтан ба төрийн бус байгууллагыг холбох платформ.</p>
+</footer>
+
+<!-- Add / edit opportunity modal -->
+<div class="modal-overlay" id="oppModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Шинэ ажил нийтлэх</h3>
+      <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Хаах">&times;</button>
+    </div>
+
+    <p class="modal-error" id="modalError"></p>
+
+    <form id="oppForm">
+      <input type="hidden" id="oppId" value="">
+
+      <div class="modal-field">
+        <label for="oppTitle">Ажлын нэр <span style="color:#C96A36;">*</span></label>
+        <input type="text" id="oppTitle" required placeholder="Жишээ нь: Туул голын эрэг цэвэрлэх өдөрлөг">
+      </div>
+
+      <div class="modal-field">
+        <label for="oppDesc">Тайлбар</label>
+        <textarea id="oppDesc" placeholder="Юу хийх, ямар хэрэгсэл өгөх, хэдэн хүн хэрэгтэй гэх мэт..."></textarea>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="oppCategory">Чиглэл <span style="color:#C96A36;">*</span></label>
+          <select id="oppCategory" required>
+            <option value="environment">Байгаль орчин</option>
+            <option value="education">Боловсрол</option>
+            <option value="health">Эрүүл мэнд</option>
+            <option value="animals">Амьтан хамгаалал</option>
+            <option value="community">Хамт олны хөгжил</option>
+            <option value="other">Бусад</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="oppStatus">Төлөв</label>
+          <select id="oppStatus">
+            <option value="active">Идэвхтэй</option>
+            <option value="draft">Ноорог</option>
+            <option value="completed">Дууссан</option>
+            <option value="cancelled">Цуцлагдсан</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="oppLocationType">Байршлын төрөл</label>
+          <select id="oppLocationType">
+            <option value="in_person">Газар дээр нь</option>
+            <option value="online">Онлайн</option>
+          </select>
+        </div>
+        <div class="modal-field" id="oppLocationLabelWrap">
+          <label for="oppLocationLabel">Байршил</label>
+          <input type="text" id="oppLocationLabel" placeholder="Улаанбаатар, Хан-Уул">
+        </div>
+      </div>
+
+      <label class="modal-check">
+        <input type="checkbox" id="oppRecurring">
+        Тогтмол ажил уу? (нэг удаагийн огноогүй)
+      </label>
+
+      <div class="modal-row">
+        <div class="modal-field" id="oppDateWrap">
+          <label for="oppDate">Огноо</label>
+          <input type="date" id="oppDate">
+        </div>
+        <div class="modal-field" id="oppScheduleWrap" style="display:none;">
+          <label for="oppSchedule">Давтамж</label>
+          <input type="text" id="oppSchedule" placeholder="Жишээ нь: 7 хоногт 2 цаг">
+        </div>
+        <div class="modal-field">
+          <label for="oppHours">Хугацаа (цаг)</label>
+          <input type="number" id="oppHours" min="0" step="0.5" placeholder="3">
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="oppStartTime">Эхлэх цаг</label>
+          <input type="time" id="oppStartTime">
+        </div>
+        <div class="modal-field">
+          <label for="oppEndTime">Дуусах цаг</label>
+          <input type="time" id="oppEndTime">
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="modal-field">
+          <label for="oppMinAge">Доод нас</label>
+          <input type="number" id="oppMinAge" min="0" max="120" step="1" placeholder="Жишээ нь: 16">
+        </div>
+        <div class="modal-field">
+          <label for="oppMaxAge">Дээд нас</label>
+          <input type="number" id="oppMaxAge" min="0" max="120" step="1" placeholder="Хязгааргүй бол хоосон орхино">
+        </div>
+      </div>
+
+      <div class="modal-field">
+        <label for="oppNeeded">Хэдэн сайн дурынхан хэрэгтэй вэ?</label>
+        <input type="number" id="oppNeeded" min="0" step="1" placeholder="25">
+      </div>
+
+      <label class="modal-check">
+        <input type="checkbox" id="oppExperienceRequired">
+        Туршлага шаардлагатай уу?
+      </label>
+
+      <div id="oppExperienceNeededWrap" style="display:none;">
+        <div class="modal-field">
+          <label for="oppExperienceNeeded">Ямар туршлага хэрэгтэй вэ?</label>
+          <textarea id="oppExperienceNeeded" placeholder="Жишээ нь: эмнэлгийн мэдлэгтэй, өмнө нь ижил төстэй ажилд оролцож байсан гэх мэт..."></textarea>
+        </div>
+        <div class="modal-field">
+          <label for="oppExperienceQuestion">Туршлагын талаар ямар асуулт асуух вэ?</label>
+          <input type="text" id="oppExperienceQuestion" placeholder="Өмнө ямар туршлага/ажил хийж байсан бэ?">
+        </div>
+        <div class="modal-field">
+          <label for="oppMotivationQuestion">Нэгдэх шалтгааны талаар ямар асуулт асуух вэ?</label>
+          <input type="text" id="oppMotivationQuestion" placeholder="Яагаад энэ ажилд нэгдэхийг хүсэж байна вэ?">
+        </div>
+      </div>
+
+      <div class="modal-field">
+        <label for="oppBenefits">Сайн дурынханд юу өгөгдөх вэ?</label>
+        <textarea id="oppBenefits" placeholder="Жишээ нь: хоол, унаа, ажлын хэрэгсэл гэх мэт..."></textarea>
+      </div>
+
+      <div class="modal-field">
+        <label for="oppCertificateType">Гэрчилгээ</label>
+        <select id="oppCertificateType">
+          <option value="none">Гэрчилгээ өгөхгүй</option>
+          <option value="online">Онлайн гэрчилгээ</option>
+          <option value="in_person">Биечлэн гэрчилгээ</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-manage" id="modalCancelBtn">Болих</button>
+        <button type="submit" class="btn-apply" id="modalSaveBtn">Хадгалах</button>
+      </div>
+
+      <button type="button" class="modal-delete" id="modalDeleteBtn" style="display:none;">Энэ ажлыг устгах</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script src="notifications-ui.js"></script>
+<script>
+  const CATEGORY_MAP = {
+    environment: { label: 'Байгаль орчин', tagClass: 'opp-tag--env' },
+    education:   { label: 'Боловсрол',      tagClass: 'opp-tag--edu' },
+    health:      { label: 'Эрүүл мэнд',     tagClass: 'opp-tag--health' },
+    animals:     { label: 'Амьтан хамгаалал', tagClass: 'opp-tag--animal' },
+    community:   { label: 'Хамт олны хөгжил', tagClass: 'opp-tag--community' },
+    other:       { label: 'Бусад',          tagClass: 'opp-tag--other' }
+  };
+  const STATUS_MAP = {
+    active: 'Идэвхтэй', completed: 'Дууссан', draft: 'Ноорог', cancelled: 'Цуцлагдсан'
+  };
+
+  let currentProfile = null;
+  let oppList = [];
+  let activeFilter = 'all';
+
+  function formatMonthDay(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    if (isNaN(d)) return dateStr;
+    return `${d.getMonth() + 1}-р сарын ${d.getDate()}`;
+  }
+
+  function orgInitials(name) {
+    return (name || 'Байгууллага').split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'БГ';
+  }
+
+  function setAvatarEl(el, name, url) {
+    if (url) {
+      el.innerHTML = `<img src="${url}" alt="">`;
+    } else {
+      el.textContent = orgInitials(name);
+    }
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function cardHtml(o) {
+    const cat = CATEGORY_MAP[o.category] || CATEGORY_MAP.other;
+    const statusClass = o.status !== 'active' ? ` opp-card--${o.status}` : '';
+    const locationLine = o.location_type === 'online'
+      ? '💻 Онлайн'
+      : `📍 ${o.location_label || 'Байршил тодорхойгүй'}`;
+    const dateLine = o.is_recurring
+      ? `🗓 ${o.schedule_note || 'Тогтмол'}`
+      : `🗓 ${o.event_date ? formatMonthDay(o.event_date) : 'Огноо тодорхойгүй'}`;
+    const hoursLine = o.hours_estimate ? `⏱ ${o.hours_estimate} цаг` : '';
+    const timeLine = o.start_time
+      ? (o.end_time ? `🕐 ${o.start_time.slice(0, 5)}–${o.end_time.slice(0, 5)}` : `🕐 ${o.start_time.slice(0, 5)}-с`)
+      : '';
+    const ageBadgeText = (o.min_age != null && o.max_age != null) ? `${o.min_age}–${o.max_age}`
+      : o.min_age != null ? `${o.min_age}+`
+      : o.max_age != null ? `≤${o.max_age}`
+      : '';
+    const applicantText = o.volunteers_needed
+      ? `${o.applicant_count || 0}/${o.volunteers_needed} бүртгүүлсэн`
+      : `${o.applicant_count || 0} бүртгүүлсэн`;
+    const statusNote = o.status !== 'active' ? `<span class="card-status-note">${STATUS_MAP[o.status] || o.status}</span>` : '';
+
+    return `
+      <article class="opp-card opp-card--manage${statusClass}" data-status="${o.status}">
+        <div class="opp-top">
+          <div class="org-logo" style="background:#3E6B4E">${orgInitials(currentProfile && currentProfile.org_name)}</div>
+          <div class="opp-top-right">
+            ${o.experience_required ? `<span class="exp-badge">🎓 Туршлага</span>` : ''}
+            ${ageBadgeText ? `<span class="age-badge">🔞 ${ageBadgeText} нас</span>` : ''}
+            <span class="opp-tag ${cat.tagClass}">${cat.label}</span>
+          </div>
+        </div>
+        <h3 class="opp-title">${escapeHtml(o.title)}</h3>
+        <p class="opp-desc">${escapeHtml(o.description || '')}</p>
+        <div class="opp-meta">
+          <span>${locationLine}</span>
+          <span>${dateLine}</span>
+          ${timeLine ? `<span>${timeLine}</span>` : ''}
+          ${hoursLine ? `<span>${hoursLine}</span>` : ''}
+        </div>
+        <div class="opp-bottom">
+          <div class="applicants">
+            <span class="applicants-count">${applicantText}${statusNote}</span>
+          </div>
+          <button class="btn-manage" data-edit-id="${o.id}">Засах</button>
+          <div class="opp-actions">
+            ${o.experience_required ? `<a class="btn-manage" href="Manai_gishuud.html?opp=${o.id}">Хүсэлт харах</a>` : ''}
+            <a class="btn-manage" href="Gerchilgee.html?id=${o.id}">Ирц авах</a>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function renderFeed() {
+    const feed = document.getElementById('oppFeed');
+    const filtered = activeFilter === 'all' ? oppList : oppList.filter(o => o.status === activeFilter);
+
+    if (filtered.length === 0) {
+      feed.innerHTML = `
+        <div class="empty-state">
+          ${oppList.length === 0
+            ? 'Та одоогоор ажил нийтлээгүй байна. Эхний сайн дурын ажлаа нийтлээрэй!'
+            : 'Энэ төлөвт тохирох ажил алга.'}
+          <br>
+          <button type="button" class="btn-manage" id="emptyAddBtn">+ Шинэ ажил нийтлэх</button>
+        </div>`;
+      const btn = document.getElementById('emptyAddBtn');
+      if (btn) btn.addEventListener('click', () => openModal());
+      return;
+    }
+
+    feed.innerHTML = filtered.map(cardHtml).join('');
+    feed.querySelectorAll('[data-edit-id]').forEach(btn => {
+      btn.addEventListener('click', () => openModal(btn.getAttribute('data-edit-id')));
+    });
+  }
+
+  function renderStats() {
+    document.getElementById('statTotal').textContent = oppList.length;
+    document.getElementById('statActive').textContent = oppList.filter(o => o.status === 'active').length;
+    document.getElementById('statApplicants').textContent = oppList.reduce((sum, o) => sum + (o.applicant_count || 0), 0);
+  }
+
+  async function loadOpportunities() {
+    const feed = document.getElementById('oppFeed');
+    try {
+      const { data: opps, error } = await supabaseClient
+        .from('opportunities')
+        .select('*')
+        .eq('org_id', currentProfile.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      let counts = {};
+      if (opps.length) {
+        const { data: stats, error: statsError } = await supabaseClient
+          .from('opportunity_stats')
+          .select('*')
+          .in('opportunity_id', opps.map(o => o.id));
+        if (!statsError && stats) {
+          stats.forEach(s => { counts[s.opportunity_id] = s.applicant_count; });
+        }
+      }
+
+      oppList = opps.map(o => ({ ...o, applicant_count: counts[o.id] || 0 }));
+      renderStats();
+      renderFeed();
+    } catch (err) {
+      feed.innerHTML = `
+        <div class="error-state">
+          Ажлын мэдээллийг татахад алдаа гарлаа: ${escapeHtml(err.message || String(err))}<br>
+          Хэрэв энэ анх удаагаа бол Supabase дээр <code>opportunities</code> болон
+          <code>applications</code> хүснэгтийг үүсгэсэн эсэхээ шалгана уу
+          (<code>supabase_schema_opportunities.sql</code>).
+        </div>`;
+      console.error(err);
+    }
+  }
+
+  // ---------- modal ----------
+  const overlay = document.getElementById('oppModalOverlay');
+  const form = document.getElementById('oppForm');
+  const modalError = document.getElementById('modalError');
+  const recurringBox = document.getElementById('oppRecurring');
+  const dateWrap = document.getElementById('oppDateWrap');
+  const scheduleWrap = document.getElementById('oppScheduleWrap');
+  const locationType = document.getElementById('oppLocationType');
+  const locationLabelWrap = document.getElementById('oppLocationLabelWrap');
+  const experienceBox = document.getElementById('oppExperienceRequired');
+  const experienceNeededWrap = document.getElementById('oppExperienceNeededWrap');
+  const deleteBtn = document.getElementById('modalDeleteBtn');
+
+  function toggleRecurringFields() {
+    const recurring = recurringBox.checked;
+    dateWrap.style.display = recurring ? 'none' : '';
+    scheduleWrap.style.display = recurring ? '' : 'none';
+  }
+  function toggleLocationField() {
+    locationLabelWrap.style.display = locationType.value === 'online' ? 'none' : '';
+  }
+  function toggleExperienceFields() {
+    experienceNeededWrap.style.display = experienceBox.checked ? '' : 'none';
+  }
+  recurringBox.addEventListener('change', toggleRecurringFields);
+  locationType.addEventListener('change', toggleLocationField);
+  experienceBox.addEventListener('change', toggleExperienceFields);
+
+  function openModal(editId) {
+    modalError.style.display = 'none';
+    form.reset();
+    toggleRecurringFields();
+    toggleLocationField();
+    toggleExperienceFields();
+
+    if (editId) {
+      const o = oppList.find(x => String(x.id) === String(editId));
+      if (!o) return;
+      document.getElementById('modalTitle').textContent = 'Ажил засах';
+      document.getElementById('oppId').value = o.id;
+      document.getElementById('oppTitle').value = o.title || '';
+      document.getElementById('oppDesc').value = o.description || '';
+      document.getElementById('oppCategory').value = o.category || 'environment';
+      document.getElementById('oppStatus').value = o.status || 'active';
+      document.getElementById('oppLocationType').value = o.location_type || 'in_person';
+      document.getElementById('oppLocationLabel').value = o.location_label || '';
+      document.getElementById('oppRecurring').checked = !!o.is_recurring;
+      document.getElementById('oppDate').value = o.event_date || '';
+      document.getElementById('oppSchedule').value = o.schedule_note || '';
+      document.getElementById('oppHours').value = o.hours_estimate || '';
+      document.getElementById('oppStartTime').value = o.start_time ? o.start_time.slice(0, 5) : '';
+      document.getElementById('oppEndTime').value = o.end_time ? o.end_time.slice(0, 5) : '';
+      document.getElementById('oppMinAge').value = o.min_age != null ? o.min_age : '';
+      document.getElementById('oppMaxAge').value = o.max_age != null ? o.max_age : '';
+      document.getElementById('oppNeeded').value = o.volunteers_needed || '';
+      document.getElementById('oppExperienceRequired').checked = !!o.experience_required;
+      document.getElementById('oppExperienceNeeded').value = o.experience_needed || '';
+      document.getElementById('oppExperienceQuestion').value = o.experience_question || '';
+      document.getElementById('oppMotivationQuestion').value = o.motivation_question || '';
+      document.getElementById('oppBenefits').value = o.benefits_provided || '';
+      document.getElementById('oppCertificateType').value = o.certificate_type || 'none';
+      deleteBtn.style.display = '';
+    } else {
+      document.getElementById('modalTitle').textContent = 'Шинэ ажил нийтлэх';
+      document.getElementById('oppId').value = '';
+      document.getElementById('oppStatus').value = 'active';
+      document.getElementById('oppCertificateType').value = 'none';
+      deleteBtn.style.display = 'none';
+    }
+
+    toggleRecurringFields();
+    toggleLocationField();
+    toggleExperienceFields();
+    overlay.classList.add('is-open');
+  }
+
+  function closeModal() {
+    overlay.classList.remove('is-open');
+  }
+
+  document.getElementById('openAddBtn').addEventListener('click', () => openModal());
+  document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+  document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    modalError.style.display = 'none';
+
+    const id = document.getElementById('oppId').value;
+    const isRecurring = document.getElementById('oppRecurring').checked;
+    const experienceRequired = document.getElementById('oppExperienceRequired').checked;
+
+    const minAgeVal = document.getElementById('oppMinAge').value;
+    const maxAgeVal = document.getElementById('oppMaxAge').value;
+    if (minAgeVal && maxAgeVal && parseInt(minAgeVal, 10) > parseInt(maxAgeVal, 10)) {
+      modalError.textContent = 'Доод нас дээд наснаас их байж болохгүй.';
+      modalError.style.display = 'block';
+      return;
+    }
+
+    const startTimeVal = document.getElementById('oppStartTime').value;
+    const endTimeVal = document.getElementById('oppEndTime').value;
+    if (startTimeVal && endTimeVal && startTimeVal >= endTimeVal) {
+      modalError.textContent = 'Дуусах цаг эхлэх цагаас хойш байх ёстой.';
+      modalError.style.display = 'block';
+      return;
+    }
+
+    const payload = {
+      title: document.getElementById('oppTitle').value.trim(),
+      description: document.getElementById('oppDesc').value.trim() || null,
+      category: document.getElementById('oppCategory').value,
+      status: document.getElementById('oppStatus').value,
+      location_type: document.getElementById('oppLocationType').value,
+      location_label: document.getElementById('oppLocationLabel').value.trim() || null,
+      is_recurring: isRecurring,
+      event_date: isRecurring ? null : (document.getElementById('oppDate').value || null),
+      schedule_note: isRecurring ? (document.getElementById('oppSchedule').value.trim() || null) : null,
+      hours_estimate: document.getElementById('oppHours').value ? Number(document.getElementById('oppHours').value) : null,
+      start_time: document.getElementById('oppStartTime').value || null,
+      end_time: document.getElementById('oppEndTime').value || null,
+      min_age: document.getElementById('oppMinAge').value ? parseInt(document.getElementById('oppMinAge').value, 10) : null,
+      max_age: document.getElementById('oppMaxAge').value ? parseInt(document.getElementById('oppMaxAge').value, 10) : null,
+      volunteers_needed: document.getElementById('oppNeeded').value ? parseInt(document.getElementById('oppNeeded').value, 10) : null,
+      experience_required: experienceRequired,
+      experience_needed: experienceRequired ? (document.getElementById('oppExperienceNeeded').value.trim() || null) : null,
+      experience_question: experienceRequired ? (document.getElementById('oppExperienceQuestion').value.trim() || null) : null,
+      motivation_question: experienceRequired ? (document.getElementById('oppMotivationQuestion').value.trim() || null) : null,
+      benefits_provided: document.getElementById('oppBenefits').value.trim() || null,
+      certificate_type: document.getElementById('oppCertificateType').value
+    };
+
+    const saveBtn = document.getElementById('modalSaveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Хадгалж байна…';
+
+    try {
+      if (id) {
+        const { error } = await supabaseClient
+          .from('opportunities')
+          .update(payload)
+          .eq('id', id)
+          .eq('org_id', currentProfile.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabaseClient
+          .from('opportunities')
+          .insert([{ ...payload, org_id: currentProfile.id }]);
+        if (error) throw error;
+      }
+      closeModal();
+      await loadOpportunities();
+    } catch (err) {
+      modalError.textContent = 'Хадгалахад алдаа гарлаа: ' + (err.message || String(err));
+      modalError.style.display = 'block';
+      console.error(err);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Хадгалах';
+    }
+  });
+
+  deleteBtn.addEventListener('click', async () => {
+    const id = document.getElementById('oppId').value;
+    if (!id) return;
+    if (!confirm('Энэ ажлыг устгахдаа итгэлтэй байна уу? Үйлдлийг буцаах боломжгүй.')) return;
+
+    try {
+      const { error } = await supabaseClient
+        .from('opportunities')
+        .delete()
+        .eq('id', id)
+        .eq('org_id', currentProfile.id);
+      if (error) throw error;
+      closeModal();
+      await loadOpportunities();
+    } catch (err) {
+      modalError.textContent = 'Устгахад алдаа гарлаа: ' + (err.message || String(err));
+      modalError.style.display = 'block';
+      console.error(err);
+    }
+  });
+
+  // ---------- filter chips ----------
+  document.querySelectorAll('.filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filters .chip').forEach(c => {
+        c.classList.remove('is-active');
+        c.setAttribute('aria-selected', 'false');
+      });
+      chip.classList.add('is-active');
+      chip.setAttribute('aria-selected', 'true');
+      activeFilter = chip.getAttribute('data-filter');
+      renderFeed();
+    });
+  });
+
+  // ---------- boot ----------
+  (async () => {
+    const session = await requireSession(); // redirects to login.html if not signed in
+    if (!session) return;
+
+    const profile = await getCurrentProfile();
+    if (!profile) return;
+
+    if (profile.role !== 'org') {
+      window.location.href = 'Main_vol.html';
+      return;
+    }
+
+    currentProfile = profile;
+    const name = profile.org_name || 'Байгууллага';
+    document.getElementById('greeting').textContent = `Сайн байна уу, ${name} 👋`;
+    setAvatarEl(document.getElementById('avatarInitials'), name, profile.avatar_url);
+
+    await loadOpportunities();
+  })();
+
+  document.getElementById('logoutBtn').addEventListener('click', signOut);
+</script>
+
+</body>
+</html>

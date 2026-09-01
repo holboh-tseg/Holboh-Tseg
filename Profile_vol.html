@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Миний профайл — ХАМТ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Main_vol_s.css">
+<link rel="stylesheet" href="polish.css">
+<style>
+  .profile-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    margin-bottom: 20px;
+  }
+  .profile-card h4 {
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .profile-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .profile-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .profile-field .value {
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .profile-field input,
+  .profile-field select,
+  .profile-field textarea {
+    width: 100%;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .profile-field textarea { resize: vertical; }
+  .profile-field.full { grid-column: 1 / -1; }
+  .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .profile-message { font-size: 13px; margin: 12px 0 0; display: none; }
+  .profile-message.is-error { color: #B23B3B; }
+  .profile-message.is-ok { color: var(--steppe); }
+  .profile-hero-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--gold); color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 600; font-size: 18px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .profile-hero-avatar img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .profile-avatar-row {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+  }
+  .avatar-upload-btn {
+    font-size: 13px; font-weight: 600; color: var(--forest, var(--ink));
+    background: none; border: 1px solid var(--line);
+    border-radius: var(--radius-sm); padding: 8px 14px; cursor: pointer;
+  }
+  .avatar-upload-btn:hover { background: var(--paper-dim, #ECE4D2); }
+
+  .security-zone {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+  }
+  .security-zone h4 {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-size: 13.5px; font-weight: 600;
+    color: var(--ink);
+  }
+  .security-zone p { margin: 0; font-size: 12.5px; color: var(--ink-soft); max-width: 480px; }
+  .btn-manage-link {
+    background: none; color: var(--ink); border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px; font-size: 13.5px; font-weight: 600;
+    font-family: inherit; cursor: pointer; white-space: nowrap;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-manage-link:hover { background: var(--paper-dim, #ECE4D2); }
+
+  .danger-zone {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+    border: 1.5px solid #E3B8B8;
+    border-radius: var(--radius-lg);
+    padding: 22px 26px;
+    margin-top: 0;
+  }
+  .danger-zone h4 {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-size: 13.5px; font-weight: 600;
+    color: #B23B3B;
+  }
+  .danger-zone p { margin: 0; font-size: 12.5px; color: var(--ink-soft); max-width: 480px; }
+  .btn-danger {
+    background: #B23B3B; color: #fff; border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 18px; font-size: 13.5px; font-weight: 600;
+    font-family: inherit; cursor: pointer; white-space: nowrap;
+  }
+  .btn-danger:hover { background: #9A2F2F; }
+  .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(20,16,12,0.5);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; z-index: 1000;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-box {
+    background: var(--white); border-radius: var(--radius-lg);
+    padding: 28px; max-width: 420px; width: 100%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+  .modal-box h3 { margin: 0 0 12px; font-family: var(--font-display); font-size: 16px; }
+  .modal-warning {
+    background: #FBEAEA; border: 1px solid #E3B8B8; border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 13px; color: #8A2E2E; margin: 0 0 16px; line-height: 1.5;
+  }
+  .modal-note {
+    background: var(--paper-dim, #ECE4D2); border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 13px; color: var(--ink-soft); margin: 0 0 16px; line-height: 1.5;
+  }
+  .modal-box label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+  .modal-box input[type="password"],
+  .modal-box input[type="email"] {
+    width: 100%; border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+    padding: 9px 12px; font-size: 13.5px; font-family: inherit; margin-bottom: 6px;
+    box-sizing: border-box;
+  }
+  .modal-error { min-height: 16px; font-size: 12.5px; color: #B23B3B; margin: 0 0 10px; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <a class="wordmark" href="Intro.html">
+      <img class="wordmark-knot" src="logo-badge.png" alt="ХАМТ лого" width="76" height="76" style="object-fit:contain;">
+      ХАМТ
+    </a>
+
+    <nav class="main-nav" aria-label="Үндсэн цэс">
+      <a class="nav-link" href="Main_vol.html">Сайн дурын ажлууд</a>
+      <a class="nav-link" href="Baiguullaguud_vol.html">Байгууллагууд</a>
+      <a class="nav-link" href="Minii_idevh.html">Миний идэвх</a>
+    </nav>
+
+    <div class="topnav-actions">
+      <button class="icon-btn" aria-label="Мэдэгдэл">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M4 7.5a5.5 5.5 0 0 1 11 0c0 3.2 1 4.3 1.5 5H2.5c.5-.7 1.5-1.8 1.5-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 15.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn" id="logoutBtn" aria-label="Гарах" title="Гарах">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M7 2.5H4a1.5 1.5 0 0 0-1.5 1.5v10A1.5 1.5 0 0 0 4 15.5h3M12.5 12.5 16 9l-3.5-3.5M16 9H6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <a class="avatar" href="Profile_vol.html" aria-label="Профайл" id="avatarInitials">ХД</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow" id="greeting">Сайн байна уу 👋</p>
+      <h1 class="hero-title">Миний профайл</h1>
+      <p class="hero-sub">Хувийн мэдээллээ шинэчилж, өнгөрсөн идэвхээ эндээс хайж үзээрэй.</p>
+    </div>
+  </section>
+
+  <div class="content-grid" style="grid-template-areas: 'feed feed'; padding-top:40px;">
+    <div style="grid-area: feed;">
+
+      <div class="profile-card">
+        <div class="profile-card-head">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <span class="profile-hero-avatar" id="viewAvatar">ХД</span>
+            <div>
+              <h4>Хувийн мэдээлэл</h4>
+              <p style="margin:0; font-size:12.5px; color:var(--ink-soft);">Танай нэр, холбоо барих мэдээлэл</p>
+            </div>
+          </div>
+          <button type="button" class="btn-manage" id="editToggleBtn">Профайл засах</button>
+        </div>
+
+        <div class="profile-avatar-row" id="avatarEditRow" style="display:none;">
+          <span class="profile-hero-avatar" id="editAvatarPreview">ХД</span>
+          <div>
+            <button type="button" class="avatar-upload-btn" id="avatarUploadBtn">Зураг солих</button>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+          </div>
+        </div>
+
+        <div id="profileView" class="profile-grid">
+          <div class="profile-field">
+            <label>Овог</label>
+            <p class="value" id="viewLastName">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Нэр</label>
+            <p class="value" id="viewFirstName">–</p>
+          </div>
+          <div class="profile-field">
+            <label>И-мэйл</label>
+            <p class="value" id="viewEmail">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Төрсөн огноо</label>
+            <p class="value" id="viewBirthdate">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Утасны дугаар</label>
+            <p class="value" id="viewPhone">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Хот / Аймаг</label>
+            <p class="value" id="viewCity">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Сонирхож буй чиглэл</label>
+            <p class="value" id="viewInterests">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Ажлын газар / Сургууль</label>
+            <p class="value" id="viewWorkplace">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Боловсрол</label>
+            <p class="value" id="viewEducation">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Instagram</label>
+            <p class="value" id="viewInstagram">–</p>
+          </div>
+          <div class="profile-field">
+            <label>Facebook</label>
+            <p class="value" id="viewFacebook">–</p>
+          </div>
+          <div class="profile-field full">
+            <label>Өөрийн тухай товч</label>
+            <p class="value" id="viewAbout">–</p>
+          </div>
+        </div>
+
+        <form id="profileForm" class="profile-grid" style="display:none;">
+          <div class="profile-field">
+            <label for="editLastName">Овог</label>
+            <input type="text" id="editLastName">
+          </div>
+          <div class="profile-field">
+            <label for="editFirstName">Нэр</label>
+            <input type="text" id="editFirstName">
+          </div>
+          <div class="profile-field">
+            <label>И-мэйл</label>
+            <p class="value" id="editEmailNote" style="color:var(--ink-soft);">–</p>
+          </div>
+          <div class="profile-field">
+            <label for="editPhone">Утасны дугаар</label>
+            <input type="tel" id="editPhone">
+          </div>
+          <div class="profile-field">
+            <label for="editBirthdate">Төрсөн огноо</label>
+            <input type="date" id="editBirthdate">
+          </div>
+          <div class="profile-field">
+            <label for="editCity">Хот / Аймаг</label>
+            <select id="editCity">
+              <option value="ulaanbaatar">Улаанбаатар</option>
+              <option value="arkhangai">Архангай</option>
+              <option value="bayan-ulgii">Баян-Өлгий</option>
+              <option value="bayankhongor">Баянхонгор</option>
+              <option value="bulgan">Булган</option>
+              <option value="govi-altai">Говь-Алтай</option>
+              <option value="govisumber">Говьсүмбэр</option>
+              <option value="darkhan-uul">Дархан-Уул</option>
+              <option value="dornod">Дорнод</option>
+              <option value="dornogovi">Дорноговь</option>
+              <option value="dundgovi">Дундговь</option>
+              <option value="zavkhan">Завхан</option>
+              <option value="orkhon">Орхон</option>
+              <option value="uvurkhangai">Өвөрхангай</option>
+              <option value="umnugovi">Өмнөговь</option>
+              <option value="sukhbaatar">Сүхбаатар</option>
+              <option value="selenge">Сэлэнгэ</option>
+              <option value="tuv">Төв</option>
+              <option value="uvs">Увс</option>
+              <option value="khovd">Ховд</option>
+              <option value="khuvsgul">Хөвсгөл</option>
+              <option value="khentii">Хэнтий</option>
+            </select>
+          </div>
+          <div class="profile-field">
+            <label for="editInterests">Сонирхож буй чиглэл</label>
+            <select id="editInterests">
+              <option value="education">Боловсрол</option>
+              <option value="environment">Байгаль орчин</option>
+              <option value="health">Эрүүл мэнд</option>
+              <option value="animals">Амьтдын хамгаалал</option>
+              <option value="community">Хамт олны хөгжил</option>
+              <option value="other">Бусад</option>
+            </select>
+          </div>
+          <div class="profile-field">
+            <label for="editWorkplace">Ажлын газар / Сургууль</label>
+            <input type="text" id="editWorkplace" placeholder="Ажлын газар эсвэл сургуулийн нэр">
+          </div>
+          <div class="profile-field">
+            <label for="editEducation">Боловсрол</label>
+            <select id="editEducation">
+              <option value="">Сонгоно уу</option>
+              <option value="primary">Бага боловсрол</option>
+              <option value="basic">Суурь боловсрол</option>
+              <option value="complete_secondary">Бүрэн дунд боловсрол</option>
+              <option value="vocational">Мэргэжлийн / техникийн боловсрол</option>
+              <option value="diploma">Диплом / дэд бакалавр</option>
+              <option value="bachelor">Бакалавр</option>
+              <option value="master">Магистр</option>
+              <option value="doctorate">Доктор</option>
+              <option value="none">Боловсролгүй</option>
+              <option value="other">Бусад</option>
+            </select>
+          </div>
+          <div class="profile-field">
+            <label for="editInstagram">Instagram</label>
+            <input type="text" id="editInstagram" placeholder="@username эсвэл холбоос">
+          </div>
+          <div class="profile-field">
+            <label for="editFacebook">Facebook</label>
+            <input type="text" id="editFacebook" placeholder="Профайл нэр эсвэл холбоос">
+          </div>
+          <div class="profile-field full">
+            <label for="editAbout">Өөрийн тухай товч</label>
+            <textarea id="editAbout" rows="4"></textarea>
+          </div>
+        </form>
+
+        <div class="profile-actions" id="editActions" style="display:none;">
+          <button type="button" class="btn-apply" id="saveProfileBtn">Хадгалах</button>
+          <button type="button" class="btn-manage" id="cancelEditBtn">Цуцлах</button>
+        </div>
+        <p class="profile-message" id="profileMessage"></p>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-card-head">
+          <div>
+            <h4>Миний идэвхийн түүх</h4>
+            <p style="margin:0; font-size:12.5px; color:var(--ink-soft);">Бүртгүүлсэн бүх ажлаасаа нэрээр хайгаарай</p>
+          </div>
+        </div>
+        <input type="text" id="activitySearch" placeholder="Ажлын нэр эсвэл байгууллагаар хайх…" aria-label="Идэвхийн түүхээс хайх"
+          style="width:100%; border:1.5px solid var(--line); border-radius:var(--radius-sm); padding:9px 12px; font-size:13px; font-family:inherit; margin-bottom:14px;">
+        <div id="activityList">
+          <p class="load-state">Ачааллаж байна…</p>
+        </div>
+      </div>
+
+      <div class="security-zone">
+        <div>
+          <h4>Имэйл хаяг</h4>
+          <p>Одоогийн: <strong id="secCurrentEmail">–</strong>. Шинэ имэйл рүү шилжих бол доорх товчийг дарна уу.</p>
+        </div>
+        <button type="button" class="btn-manage-link" id="changeEmailBtn">Имэйл солих</button>
+      </div>
+      <p class="profile-message" id="emailChangeMsg" style="display:none;"></p>
+
+      <div class="security-zone">
+        <div>
+          <h4>Нууц үг</h4>
+          <p>Нэвтрэх нууц үгээ шинэчлэх бол доорх товчийг дарна уу.</p>
+        </div>
+        <a class="btn-manage-link" href="Reset_password.html?from=profile">Нууц үг солих</a>
+      </div>
+
+      <div class="danger-zone">
+        <div>
+          <h4>Профайл устгах</h4>
+          <p>Профайлаа устгавал таны хувийн мэдээлэл болон идэвхийн түүх бүрмөсөн устана. Энэ үйлдлийг буцаах боломжгүй.</p>
+        </div>
+        <button type="button" class="btn-danger" id="deleteAccountBtn">Профайл устгах</button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="emailModalOverlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
+    <h3 id="emailModalTitle">Имэйл хаяг солих</h3>
+    <p class="modal-note">Баталгаажуулах холбоос хуучин болон шинэ имэйл хаяг руу илгээгдэнэ. Хоёуланг нь баталгаажуулсны дараа имэйл хаяг шинэчлэгдэнэ.</p>
+    <label for="newEmailInput">Шинэ имэйл хаяг</label>
+    <input type="email" id="newEmailInput" placeholder="shine@jishee.mn" autocomplete="email">
+    <label for="emailPasswordInput" style="margin-top:10px;">Баталгаажуулахын тулд одоогийн нууц үгээ оруулна уу</label>
+    <input type="password" id="emailPasswordInput" placeholder="Нууц үг" autocomplete="current-password">
+    <p class="modal-error" id="emailModalError"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn-manage" id="emailModalCancelBtn">Цуцлах</button>
+      <button type="button" class="btn-apply" id="emailModalConfirmBtn">Илгээх</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="deleteModalOverlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <h3 id="deleteModalTitle">⚠️ Профайлаа устгах уу?</h3>
+    <p class="modal-warning">Анхаар! Энэ үйлдэл <strong>буцаах боломжгүй</strong>. Таны бүх хувийн мэдээлэл болон идэвхийн түүх бүрмөсөн устана.</p>
+    <label for="deletePasswordInput">Баталгаажуулахын тулд нууц үгээ оруулна уу</label>
+    <input type="password" id="deletePasswordInput" placeholder="Нууц үг" autocomplete="current-password">
+    <p class="modal-error" id="deleteModalError"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn-manage" id="deleteModalCancelBtn">Цуцлах</button>
+      <button type="button" class="btn-danger" id="deleteModalConfirmBtn">Профайлаа устгах</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>© 2026 ХАМТ. Сайн дурын ажилтан ба төрийн бус байгууллагыг холбох платформ.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script src="notifications-ui.js"></script>
+<script>
+  const INTEREST_LABELS = {
+    education: 'Боловсрол', environment: 'Байгаль орчин', health: 'Эрүүл мэнд',
+    animals: 'Амьтдын хамгаалал', community: 'Хамт олны хөгжил', other: 'Бусад'
+  };
+  const EDUCATION_LABELS = {
+    primary: 'Бага боловсрол',
+    basic: 'Суурь боловсрол',
+    complete_secondary: 'Бүрэн дунд боловсрол',
+    vocational: 'Мэргэжлийн / техникийн боловсрол',
+    diploma: 'Диплом / дэд бакалавр',
+    bachelor: 'Бакалавр',
+    master: 'Магистр',
+    doctorate: 'Доктор',
+    none: 'Боловсролгүй',
+    other: 'Бусад'
+  };
+  const CITY_LABELS = {
+    ulaanbaatar: 'Улаанбаатар', arkhangai: 'Архангай', 'bayan-ulgii': 'Баян-Өлгий',
+    bayankhongor: 'Баянхонгор', bulgan: 'Булган', 'govi-altai': 'Говь-Алтай',
+    govisumber: 'Говьсүмбэр', 'darkhan-uul': 'Дархан-Уул', dornod: 'Дорнод',
+    dornogovi: 'Дорноговь', dundgovi: 'Дундговь', zavkhan: 'Завхан', orkhon: 'Орхон',
+    uvurkhangai: 'Өвөрхангай', umnugovi: 'Өмнөговь', sukhbaatar: 'Сүхбаатар',
+    selenge: 'Сэлэнгэ', tuv: 'Төв', uvs: 'Увс', khovd: 'Ховд', khuvsgul: 'Хөвсгөл', khentii: 'Хэнтий'
+  };
+
+  let currentProfile = null;
+  let currentEmail = '';
+  let activities = [];
+  let searchTerm = '';
+  let pendingAvatarFile = null;
+
+  function initialsFromName(name) {
+    return (name || '').split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '??';
+  }
+  function setAvatarEl(el, name, url) {
+    if (url) {
+      el.innerHTML = `<img src="${url}" alt="">`;
+    } else {
+      el.textContent = initialsFromName(name) || 'ХД';
+    }
+  }
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+  // Accepts either a full URL or a bare @handle and returns a clickable link.
+  function socialLinkHtml(platform, raw) {
+    if (!raw) return '–';
+    const trimmed = raw.trim();
+    let href = trimmed;
+    if (!/^https?:\/\//i.test(trimmed)) {
+      const handle = trimmed.replace(/^@/, '');
+      href = platform === 'instagram'
+        ? `https://instagram.com/${handle}`
+        : `https://facebook.com/${handle}`;
+    }
+    return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(trimmed)}</a>`;
+  }
+  function formatMonthDay(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    if (isNaN(d)) return dateStr;
+    return `${d.getMonth() + 1}-р сарын ${d.getDate()}`;
+  }
+  // Formats a YYYY-MM-DD birthdate as "1998 оны 4-р сарын 12" plus the
+  // volunteer's current age, e.g. "1998 оны 4-р сарын 12 (27 нас)".
+  function formatBirthdate(birthdate) {
+    if (!birthdate) return null;
+    const d = new Date(birthdate + 'T00:00:00');
+    if (isNaN(d)) return null;
+    const today = new Date();
+    let age = today.getFullYear() - d.getFullYear();
+    const monthDiff = today.getMonth() - d.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < d.getDate())) age--;
+    return `${d.getFullYear()} оны ${d.getMonth() + 1}-р сарын ${d.getDate()} (${age} нас)`;
+  }
+  const STATUS_MAP = { pending: 'Хүлээгдэж буй', confirmed: 'Баталгаажсан', completed: 'Дууссан', cancelled: 'Цуцлагдсан' };
+
+  // ---------- view/edit profile card ----------
+
+  function fillView() {
+    setAvatarEl(document.getElementById('viewAvatar'), [currentProfile.first_name, currentProfile.last_name].filter(Boolean).join(' '), currentProfile.avatar_url);
+    document.getElementById('viewLastName').textContent = currentProfile.last_name || '–';
+    document.getElementById('viewFirstName').textContent = currentProfile.first_name || '–';
+    document.getElementById('viewEmail').textContent = currentEmail || '–';
+    document.getElementById('viewBirthdate').textContent = formatBirthdate(currentProfile.birthdate) || '–';
+    document.getElementById('viewPhone').textContent = currentProfile.phone || '–';
+    document.getElementById('viewCity').textContent = CITY_LABELS[currentProfile.city] || currentProfile.city || '–';
+    document.getElementById('viewInterests').textContent = INTEREST_LABELS[currentProfile.interests] || currentProfile.interests || '–';
+    document.getElementById('viewWorkplace').textContent = currentProfile.workplace || '–';
+    document.getElementById('viewEducation').textContent = EDUCATION_LABELS[currentProfile.education] || currentProfile.education || '–';
+    document.getElementById('viewInstagram').innerHTML = socialLinkHtml('instagram', currentProfile.instagram_url);
+    document.getElementById('viewFacebook').innerHTML = socialLinkHtml('facebook', currentProfile.facebook_url);
+    document.getElementById('viewAbout').textContent = currentProfile.about || '–';
+  }
+
+  function fillForm() {
+    setAvatarEl(document.getElementById('editAvatarPreview'), [currentProfile.first_name, currentProfile.last_name].filter(Boolean).join(' '), currentProfile.avatar_url);
+    pendingAvatarFile = null;
+    document.getElementById('editLastName').value = currentProfile.last_name || '';
+    document.getElementById('editFirstName').value = currentProfile.first_name || '';
+    document.getElementById('editEmailNote').textContent = currentEmail || '–';
+    document.getElementById('editPhone').value = currentProfile.phone || '';
+    document.getElementById('editBirthdate').value = currentProfile.birthdate || '';
+    document.getElementById('editCity').value = currentProfile.city || 'ulaanbaatar';
+    document.getElementById('editInterests').value = currentProfile.interests || 'education';
+    document.getElementById('editWorkplace').value = currentProfile.workplace || '';
+    document.getElementById('editEducation').value = currentProfile.education || '';
+    document.getElementById('editInstagram').value = currentProfile.instagram_url || '';
+    document.getElementById('editFacebook').value = currentProfile.facebook_url || '';
+    document.getElementById('editAbout').value = currentProfile.about || '';
+  }
+
+  function setEditing(on) {
+    document.getElementById('profileView').style.display = on ? 'none' : 'grid';
+    document.getElementById('profileForm').style.display = on ? 'grid' : 'none';
+    document.getElementById('avatarEditRow').style.display = on ? 'flex' : 'none';
+    document.getElementById('editActions').style.display = on ? 'flex' : 'none';
+    document.getElementById('editToggleBtn').style.display = on ? 'none' : 'inline-flex';
+    document.getElementById('profileMessage').style.display = 'none';
+    if (on) fillForm();
+  }
+
+  function showProfileMessage(text, isError) {
+    const el = document.getElementById('profileMessage');
+    el.textContent = text;
+    el.className = 'profile-message ' + (isError ? 'is-error' : 'is-ok');
+    el.style.display = 'block';
+  }
+
+  document.getElementById('editToggleBtn').addEventListener('click', () => setEditing(true));
+  document.getElementById('cancelEditBtn').addEventListener('click', () => setEditing(false));
+
+  // -- avatar picker (previews locally; uploads on Save) --
+  document.getElementById('avatarUploadBtn').addEventListener('click', () => {
+    document.getElementById('avatarFileInput').click();
+  });
+  document.getElementById('avatarFileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    pendingAvatarFile = file;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('editAvatarPreview').innerHTML = `<img src="${ev.target.result}" alt="">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('saveProfileBtn');
+    btn.disabled = true;
+    btn.textContent = 'Хадгалж байна…';
+    try {
+      if (pendingAvatarFile) {
+        currentProfile = await uploadVolunteerAvatar(pendingAvatarFile);
+      }
+      const updated = await updateVolunteerProfile({
+        last_name: document.getElementById('editLastName').value.trim(),
+        first_name: document.getElementById('editFirstName').value.trim(),
+        phone: document.getElementById('editPhone').value.trim(),
+        birthdate: document.getElementById('editBirthdate').value || null,
+        city: document.getElementById('editCity').value,
+        interests: document.getElementById('editInterests').value,
+        workplace: document.getElementById('editWorkplace').value.trim() || null,
+        education: document.getElementById('editEducation').value || null,
+        instagram_url: document.getElementById('editInstagram').value.trim() || null,
+        facebook_url: document.getElementById('editFacebook').value.trim() || null,
+        about: document.getElementById('editAbout').value.trim(),
+      });
+      currentProfile = { ...currentProfile, ...updated };
+      pendingAvatarFile = null;
+      fillView();
+      setEditing(false);
+      showProfileMessage('Профайл шинэчлэгдлээ.', false);
+
+      const name = [currentProfile.first_name, currentProfile.last_name].filter(Boolean).join(' ');
+      document.getElementById('greeting').textContent = `Сайн байна уу, ${name} 👋`;
+      setAvatarEl(document.getElementById('avatarInitials'), name, currentProfile.avatar_url);
+    } catch (err) {
+      showProfileMessage('Хадгалахад алдаа гарлаа: ' + (err.message || String(err)), true);
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Хадгалах';
+    }
+  });
+
+  // ---------- change email ----------
+  function openEmailModal() {
+    document.getElementById('newEmailInput').value = '';
+    document.getElementById('emailPasswordInput').value = '';
+    document.getElementById('emailModalError').textContent = '';
+    document.getElementById('emailModalOverlay').hidden = false;
+    document.getElementById('newEmailInput').focus();
+  }
+  function closeEmailModal() {
+    document.getElementById('emailModalOverlay').hidden = true;
+  }
+  document.getElementById('changeEmailBtn').addEventListener('click', openEmailModal);
+  document.getElementById('emailModalCancelBtn').addEventListener('click', closeEmailModal);
+  document.getElementById('emailPasswordInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('emailModalConfirmBtn').click();
+  });
+  document.getElementById('emailModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'emailModalOverlay') closeEmailModal();
+  });
+
+  document.getElementById('emailModalConfirmBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('emailModalConfirmBtn');
+    const errEl = document.getElementById('emailModalError');
+    const newEmail = document.getElementById('newEmailInput').value.trim();
+    const password = document.getElementById('emailPasswordInput').value;
+
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      errEl.textContent = 'Зөв имэйл хаяг оруулна уу.';
+      return;
+    }
+    if (newEmail.toLowerCase() === (currentEmail || '').toLowerCase()) {
+      errEl.textContent = 'Энэ таны одоогийн имэйл хаяг байна.';
+      return;
+    }
+    if (!password) {
+      errEl.textContent = 'Нууц үгээ оруулна уу.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Илгээж байна…';
+    errEl.textContent = '';
+
+    try {
+      // Re-authenticate before allowing an email change, same pattern as
+      // account deletion below.
+      const { error: authError } = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password });
+      if (authError) {
+        errEl.textContent = 'Нууц үг буруу байна.';
+        btn.disabled = false;
+        btn.textContent = 'Илгээх';
+        return;
+      }
+
+      // Supabase's default "secure email change" sends a confirmation link
+      // to BOTH the old and new address, and only swaps the email over once
+      // both are confirmed. currentEmail here stays as the old address
+      // until that happens — this call does not change it immediately.
+      const { error: updateError } = await supabaseClient.auth.updateUser({ email: newEmail });
+      if (updateError) {
+        errEl.textContent = 'Алдаа гарлаа: ' + updateError.message;
+        btn.disabled = false;
+        btn.textContent = 'Илгээх';
+        return;
+      }
+
+      closeEmailModal();
+      const msgEl = document.getElementById('emailChangeMsg');
+      msgEl.textContent = 'Баталгаажуулах холбоос хуучин болон шинэ имэйл хаяг руу илгээгдлээ. Хоёуланг нь баталгаажуулснаар имэйл хаяг шинэчлэгдэнэ.';
+      msgEl.className = 'profile-message is-ok';
+      msgEl.style.display = 'block';
+    } catch (err) {
+      errEl.textContent = 'Алдаа гарлаа: ' + (err.message || String(err));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Илгээх';
+    }
+  });
+
+  // ---------- delete account ----------
+  function openDeleteModal() {
+    document.getElementById('deletePasswordInput').value = '';
+    document.getElementById('deleteModalError').textContent = '';
+    document.getElementById('deleteModalOverlay').hidden = false;
+    document.getElementById('deletePasswordInput').focus();
+  }
+  function closeDeleteModal() {
+    document.getElementById('deleteModalOverlay').hidden = true;
+  }
+  document.getElementById('deleteAccountBtn').addEventListener('click', openDeleteModal);
+  document.getElementById('deleteModalCancelBtn').addEventListener('click', closeDeleteModal);
+  document.getElementById('deleteModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'deleteModalOverlay') closeDeleteModal();
+  });
+  document.getElementById('deletePasswordInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('deleteModalConfirmBtn').click();
+  });
+
+  document.getElementById('deleteModalConfirmBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('deleteModalConfirmBtn');
+    const errEl = document.getElementById('deleteModalError');
+    const password = document.getElementById('deletePasswordInput').value;
+
+    if (!password) {
+      errEl.textContent = 'Нууц үгээ оруулна уу.';
+      return;
+    }
+    if (!currentEmail) {
+      errEl.textContent = 'И-мэйл олдсонгүй.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Устгаж байна…';
+    errEl.textContent = '';
+
+    try {
+      // Re-authenticate with the entered password before allowing deletion
+      const { error: authError } = await supabaseClient.auth.signInWithPassword({ email: currentEmail, password });
+      if (authError) {
+        errEl.textContent = 'Нууц үг буруу байна.';
+        btn.disabled = false;
+        btn.textContent = 'Профайлаа устгах';
+        return;
+      }
+
+      // Deletes the account server-side — implement in supabase-client.js.
+      // Client keys can't delete auth.users directly, so this must call
+      // a Supabase Edge Function or RPC running with elevated privileges.
+      await deleteOwnAccount();
+
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+    } catch (err) {
+      errEl.textContent = 'Устгахад алдаа гарлаа: ' + (err.message || String(err));
+      btn.disabled = false;
+      btn.textContent = 'Профайлаа устгах';
+    }
+  });
+
+  // ---------- activity history search ----------
+
+  function activityRowHtml(a) {
+    const o = a.opportunity || {};
+    const org = o.organization || {};
+    const statusLabel = STATUS_MAP[a.status] || a.status;
+    const dateLine = o.is_recurring ? (o.schedule_note || 'Тогтмол') : (o.event_date ? formatMonthDay(o.event_date) : 'Огноо тодорхойгүй');
+    return `
+      <div class="member-row" data-status="${a.status}">
+        <div class="member-info">
+          <p class="member-name">${escapeHtml(o.title || 'Ажил устгагдсан')}</p>
+          <p class="member-role">${escapeHtml(org.org_name || '')} · ${escapeHtml(dateLine)}</p>
+        </div>
+        <span class="status-badge">${statusLabel}</span>
+      </div>`;
+  }
+
+  function renderActivityList() {
+    const el = document.getElementById('activityList');
+    let filtered = activities;
+    if (searchTerm.trim()) {
+      const term = searchTerm.trim().toLowerCase();
+      filtered = activities.filter(a => {
+        const o = a.opportunity || {};
+        const org = o.organization || {};
+        const haystack = `${o.title || ''} ${org.org_name || ''}`.toLowerCase();
+        return haystack.includes(term);
+      });
+    }
+
+    if (filtered.length === 0) {
+      el.innerHTML = `<p class="load-state">${activities.length === 0 ? 'Та одоогоор ямар ч ажилд бүртгүүлээгүй байна.' : 'Тохирох ажил алга.'}</p>`;
+      return;
+    }
+    el.innerHTML = `<div class="member-panel">${filtered.map(activityRowHtml).join('')}</div>`;
+  }
+
+  document.getElementById('activitySearch').addEventListener('input', (e) => {
+    searchTerm = e.target.value;
+    renderActivityList();
+  });
+
+  async function loadActivityHistory() {
+    try {
+      activities = await getMyActivities();
+      renderActivityList();
+    } catch (err) {
+      document.getElementById('activityList').innerHTML =
+        `<div class="error-state">Идэвхийн түүхийг татахад алдаа гарлаа: ${escapeHtml(err.message || String(err))}</div>`;
+      console.error(err);
+    }
+  }
+
+  // ---------- boot ----------
+  (async () => {
+    const session = await requireSession();
+    if (!session) return;
+
+    const profile = await getCurrentProfile();
+    if (!profile) return;
+
+    if (profile.role === 'org') {
+      window.location.href = 'Main_org.html';
+      return;
+    }
+
+    currentProfile = profile;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    currentEmail = (user && user.email) || '';
+    document.getElementById('secCurrentEmail').textContent = currentEmail || '–';
+
+    const name = [profile.first_name, profile.last_name].filter(Boolean).join(' ');
+    document.getElementById('greeting').textContent = `Сайн байна уу, ${name} 👋`;
+    setAvatarEl(document.getElementById('avatarInitials'), name, profile.avatar_url);
+
+    fillView();
+    await loadActivityHistory();
+  })();
+
+  document.getElementById('logoutBtn').addEventListener('click', signOut);
+</script>
+
+</body>
+</html>

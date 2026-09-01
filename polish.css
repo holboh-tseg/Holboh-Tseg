@@ -1,0 +1,407 @@
+/* ==========================================================================
+   polish.css — Shared Sun & Moon aesthetic layer + strict image overflow fix.
+   ========================================================================== */
+
+:root {
+  --shadow-sm: 0 4px 14px rgba(32, 48, 63, 0.08);
+  --shadow-md: 0 10px 26px rgba(32, 48, 63, 0.12);
+  --shadow-lg: 0 20px 48px rgba(20, 30, 40, 0.18);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html { scroll-behavior: smooth; }
+
+::selection { background: var(--accent-dark, #6366F1); color: #FFFFFF; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper, #F8FAFC); }
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 999px;
+  border: 2px solid var(--paper, #F8FAFC);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dark, #6366F1); }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-dark, #6366F1);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---------- STRICT AVATAR & IMAGE CONTAINMENT (FIXES TOP-RIGHT PNG BUG) ---------- */
+.avatar,
+a.avatar,
+button.avatar {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.avatar img,
+a.avatar img,
+button.avatar img,
+.about-avatar img,
+.about-avatar-lg img,
+.org-logo img,
+.org-logo--photo img,
+.member-avatar img,
+.mini-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: inherit !important;
+}
+
+.avatar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px var(--gold, #F59E0B);
+}
+
+.wordmark-knot, .brand-mark { transition: transform 0.4s var(--ease); }
+.wordmark:hover .wordmark-knot, .brand:hover .brand-mark { transform: rotate(24deg); }
+
+/* ---------- CARD ANIMATIONS & DEPTH ---------- */
+.opp-card,
+.org-card,
+.side-card,
+.info-card,
+.profile-card,
+.member-panel,
+.about-text,
+.form-box,
+.modal {
+  transition: box-shadow 0.22s var(--ease), transform 0.22s var(--ease), border-color 0.22s var(--ease);
+}
+
+.opp-card:hover,
+.org-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.progress-fill {
+  transition: width 0.5s var(--ease);
+}
+
+.feed > *,
+.org-grid > .org-card,
+.member-panel > .member-row {
+  animation: polish-rise 0.4s var(--ease) both;
+}
+
+@keyframes polish-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Report button ---------- */
+.report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  border: 1px solid var(--line, #E2E8F0);
+  background: transparent;
+  color: var(--ink-soft, #64748B);
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.18s var(--ease), border-color 0.18s var(--ease), background 0.18s var(--ease);
+}
+.report-link:hover {
+  color: #991B1B;
+  border-color: #991B1B;
+  background: #FEF2F2;
+}
+
+.btn-report-opp {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft, #64748B);
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.btn-report-opp:hover {
+  background: #FEF2F2;
+  transform: scale(1.08);
+}
+
+/* ---------- Modal fallback (in case a page's own stylesheet doesn't define these) ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 17, 32, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.modal-overlay[hidden] { display: none; }
+.modal {
+  background: var(--white, #FFFFFF);
+  border: 1px solid var(--line, #E2E8F0);
+  border-radius: var(--radius-lg, 16px);
+  max-width: 540px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 32px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: var(--shadow-lg);
+}
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-close { background: none; border: none; font-size: 1.5rem; color: var(--ink-soft, #64748B); cursor: pointer; }
+.modal-field { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+.modal-field label { font-size: 0.88rem; font-weight: 600; color: var(--ink, #0F172A); }
+.modal-field input, .modal-field select, .modal-field textarea {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm, 10px);
+  border: 1px solid var(--line, #E2E8F0);
+  background: var(--paper, #F8FAFC);
+  color: var(--ink, #0F172A);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.site-footer {
+  position: relative;
+  text-align: center;
+  padding: 28px 24px 36px;
+}
+.site-footer::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 1px;
+  margin: 0 auto 14px;
+  background: linear-gradient(90deg, transparent, var(--accent-light, #6366F1), transparent);
+}
+
+/* ---------- Shared org-profile "about" layout ----------
+   .about-grid / .subsection-title / .focus-tags / .focus-tag / .applicants
+   only lived inside Main_org_s.css, which pages like
+   Baiguullaga_profile_vol.html never load (it's the org theme's stylesheet,
+   with its own conflicting --ink/--gold/etc. root colors — linking it
+   directly would repaint the whole page in the wrong theme). Defined here
+   instead, using the same var(--token, fallback) pattern as the rest of
+   this file, so it picks up whichever theme (moon/vol or sun/org) is
+   already active on the page instead of forcing one. */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
+
+.about-text {
+  background: var(--white, #fff);
+  border: 1px solid var(--line, rgba(32, 48, 63, 0.14));
+  border-radius: var(--radius-lg, 24px);
+  padding: 28px 32px;
+}
+
+.subsection-title {
+  font-family: var(--font-display, inherit);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink, #20303F);
+  margin: 24px 0 12px;
+}
+
+.focus-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 4px;
+}
+
+.focus-tag {
+  background: var(--paper-dim, #ECE4D2);
+  color: var(--ink, #20303F);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.applicants {
+  display: flex;
+  align-items: center;
+}
+
+.applicants-count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft, #4A5C6B);
+}
+
+@media (max-width: 960px) {
+  .about-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+/* ---------- Notification bell dropdown ---------- */
+.notif-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.notif-dot {
+  display: none;
+}
+.notif-dot.is-unread {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #DC2626;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: var(--font-display, inherit);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+}
+
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  max-height: 420px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--white, #FFFFFF);
+  border: 1px solid var(--line, #E2E8F0);
+  border-radius: var(--radius-md, 16px);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  display: none;
+}
+.notif-panel.is-open {
+  display: block;
+  animation: polish-rise 0.18s var(--ease) both;
+}
+
+.notif-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line, #E2E8F0);
+}
+.notif-panel-head h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  color: var(--ink, #0F172A);
+}
+.notif-mark-all {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-light, var(--sky, #6366F1));
+  white-space: nowrap;
+}
+.notif-mark-all:hover { text-decoration: underline; }
+
+.notif-list { list-style: none; margin: 0; padding: 6px; }
+
+.notif-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  font-family: inherit;
+  color: inherit;
+  transition: background 0.15s ease;
+}
+.notif-item:hover { background: var(--paper-dim, #F1ECE4); }
+.notif-item.is-unread { background: var(--accent-soft, rgba(99, 102, 241, 0.07)); }
+.notif-item.is-unread:hover { background: var(--accent-soft, rgba(99, 102, 241, 0.12)); }
+
+.notif-item-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink, #0F172A);
+  margin-bottom: 3px;
+}
+.notif-item-body {
+  font-size: 0.8rem;
+  color: var(--ink-soft, #64748B);
+  line-height: 1.45;
+  margin-bottom: 4px;
+}
+.notif-item-time {
+  font-size: 0.72rem;
+  color: var(--ink-soft, #64748B);
+  opacity: 0.75;
+}
+
+.notif-empty, .notif-loading {
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-soft, #64748B);
+}
+
+@media (max-width: 480px) {
+  .notif-panel { width: calc(100vw - 32px); right: -8px; }
+}

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Нүүр хуудас — ХАМТ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Main_vol_s.css">
+<link rel="stylesheet" href="polish.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <a class="wordmark" href="Intro.html">
+      <img class="wordmark-knot" src="logo-badge.png" alt="ХАМТ лого" width="76" height="76" style="object-fit:contain;">
+      ХАМТ
+    </a>
+
+    <nav class="main-nav" aria-label="Үндсэн цэс">
+      <a class="nav-link is-active" href="Main_vol.html">Сайн дурын ажлууд</a>
+      <a class="nav-link" href="Baiguullaguud_vol.html">Байгууллагууд</a>
+      <a class="nav-link" href="Minii_idevh.html">Миний идэвх</a>
+    </nav>
+
+    <div class="topnav-actions">
+      <button class="icon-btn" aria-label="Мэдэгдэл">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M4 7.5a5.5 5.5 0 0 1 11 0c0 3.2 1 4.3 1.5 5H2.5c.5-.7 1.5-1.8 1.5-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 15.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn" id="logoutBtn" aria-label="Гарах" title="Гарах">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M7 2.5H4a1.5 1.5 0 0 0-1.5 1.5v10A1.5 1.5 0 0 0 4 15.5h3M12.5 12.5 16 9l-3.5-3.5M16 9H6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <a class="avatar" href="Profile_vol.html" aria-label="Профайл" id="avatarInitials">ХД</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- Hero / search -->
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow" id="greeting">Сайн байна уу 👋</p>
+      <h1 class="hero-title">Өнөөдөр хаана хэрэгтэй байх вэ?</h1>
+      <p class="hero-sub">Ойролцоох байгууллагуудын нээлттэй сайн дурын ажлуудаас сонгоод, өөрийн цагаа зориулаарай.</p>
+
+      <form class="search-bar" id="searchForm" action="#" method="get">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M16 16l-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input type="text" id="searchInput" placeholder="Жишээ нь: мод тарих, хоол тараах, орчуулга…" aria-label="Хайх">
+        <select id="locationSelect" aria-label="Байршил">
+          <option>Бүх байршил</option>
+          <option>Улаанбаатар</option>
+          <option>Дархан</option>
+          <option>Эрдэнэт</option>
+          <option>Онлайн</option>
+        </select>
+        <button type="submit">Хайх</button>
+      </form>
+
+      <div class="stat-strip">
+        <div class="stat-pill"><strong id="statOpen">–</strong><span>нээлттэй ажил</span></div>
+        <div class="stat-pill"><strong id="statOrgs">–</strong><span>байгууллага</span></div>
+        <div class="stat-pill"><strong id="statMine">–</strong><span>миний бүртгүүлсэн</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="content-grid">
+
+    <!-- Filters -->
+    <div class="filters" role="tablist" aria-label="Шүүлтүүр">
+      <button class="chip" role="tab" aria-selected="false" data-filter="new">Шинэ</button>
+      <button class="chip is-active" role="tab" aria-selected="true" data-filter="active">Тустай</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="expired">Хугацаа дуусан</button>
+    </div>
+
+    <!-- Opportunity feed -->
+    <section class="feed" aria-label="Сайн дурын ажлын жагсаалт" id="oppFeed">
+      <p class="load-state">Ачааллаж байна…</p>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <div class="side-card side-card--progress">
+        <h4>Миний сайн дурын цаг</h4>
+        <p class="progress-value" id="progressValue">– <span>/ 20 цаг</span></p>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <p class="progress-note" id="progressNote">Ачааллаж байна…</p>
+      </div>
+
+      <div class="side-card">
+        <h4>Санал болгож буй байгууллагууд</h4>
+        <ul class="org-list" id="recommendedOrgs">
+          <li><p class="org-name">Ачааллаж байна…</p></li>
+        </ul>
+        <a class="side-link" href="Baiguullaguud_vol.html">Бүх байгууллагыг үзэх →</a>
+      </div>
+
+      <div class="side-card side-card--dark">
+        <svg class="side-knot" width="26" height="26" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 2C15.9 2 20 6.1 20 11C20 15.9 15.9 20 11 20C6.1 20 2 15.9 2 11C2 6.1 6.1 2 11 2Z" stroke="currentColor" stroke-width="1.3"/><path d="M11 2C11 8 8 11 2 11M11 2C11 8 14 11 20 11M11 20C11 14 8 11 2 11M11 20C11 14 14 11 20 11" stroke="currentColor" stroke-width="1.3"/></svg>
+        <h4>Байгууллага мөн үү?</h4>
+        <p>Сайн дурынхан хайж буй бол өөрийн ажлаа платформ дээр нэмээрэй.</p>
+        <a class="btn-ghost" href="organization_sign_up.html" id="orgSignupLink">Ажил нийтлэх</a>
+      </div>
+
+    </aside>
+
+  </div>
+</main>
+
+<div class="modal-overlay" id="reportModalOverlay" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3 style="margin:0; font-size:1.1rem;" id="reportModalTitle">Ажлыг мэдээлэх</h3>
+      <button class="modal-close" id="reportModalClose" type="button" aria-label="Хаах">&times;</button>
+    </div>
+    <div class="modal-field">
+      <label for="reportReason">Шалтгаан</label>
+      <select id="reportReason">
+        <option value="spam">Спам / хуурамч</option>
+        <option value="scam">Луйвар / мөнгө шаардсан</option>
+        <option value="inappropriate">Зохисгүй контент</option>
+        <option value="no_show">Ажил зарлаад юу ч хийгээгүй</option>
+        <option value="other">Бусад шалтгаан</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label for="reportDetails">Дэлгэрэнгүй (заавал биш)</label>
+      <textarea id="reportDetails" rows="4" placeholder="Юу болсныг товч бичнэ үү…"></textarea>
+    </div>
+    <p id="reportStatusMsg" style="font-size:0.85rem; margin:0 0 12px; min-height:1em;"></p>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn-ghost" id="reportModalCancel" type="button">Цуцлах</button>
+      <button class="btn-primary" id="reportSubmitBtn" type="button">Илгээх</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="applyModalOverlay" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3 style="margin:0; font-size:1.1rem;">Бүртгүүлэх</h3>
+      <button class="modal-close" id="applyModalClose" type="button" aria-label="Хаах">&times;</button>
+    </div>
+    <p style="font-size:0.85rem; color:var(--ink-soft); margin:0 0 16px;">Энэ байгууллага туршлагатай сайн дурынхныг хайж байгаа тул дараах асуултад хариулна уу.</p>
+    <div class="modal-field">
+      <label for="applyExperience" id="applyExperienceLabel">Өмнө ямар туршлага/ажил хийж байсан бэ?</label>
+      <textarea id="applyExperience" rows="3" placeholder="Жишээ нь: өмнө нь мод тарих ажилд 2 удаа оролцож байсан…"></textarea>
+    </div>
+    <div class="modal-field">
+      <label for="applyMotivation" id="applyMotivationLabel">Яагаад энэ ажилд нэгдэхийг хүсэж байна вэ?</label>
+      <textarea id="applyMotivation" rows="3" placeholder="Юу таныг татаж байгааг товч бичнэ үү…"></textarea>
+    </div>
+    <p id="applyStatusMsg" style="font-size:0.85rem; margin:0 0 12px; min-height:1em; color:#991B1B;"></p>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn-ghost" id="applyModalCancel" type="button">Болих</button>
+      <button class="btn-primary" id="applyModalSubmit" type="button">Бүртгүүлэх</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>© 2026 ХАМТ. Сайн дурын ажилтан ба төрийн бус байгууллагыг холбох платформ.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script src="notifications-ui.js"></script>
+<script>
+  const CATEGORY_MAP = {
+    environment: { label: 'Байгаль орчин',    tagClass: 'opp-tag--env' },
+    education:   { label: 'Боловсрол',        tagClass: 'opp-tag--edu' },
+    health:      { label: 'Эрүүл мэнд',       tagClass: 'opp-tag--health' },
+    animals:     { label: 'Амьтан хамгаалал', tagClass: 'opp-tag--animal' },
+    community:   { label: 'Хамт олны хөгжил', tagClass: 'opp-tag--community' },
+    other:       { label: 'Бусад',            tagClass: 'opp-tag--other' }
+  };
+
+  const LOGO_COLORS = ['#3E6B4E', '#3E7CA6', '#C96A36', '#C99A3E'];
+  const HOURS_GOAL = 20; // display goal for the progress card
+
+  let currentProfile = null;
+  let oppList = [];        // active opportunities, enriched with org name / counts / my status
+  let activeFilter = 'active';
+  let searchQuery = '';
+  let locationQuery = 'Бүх байршил';
+
+  function formatMonthDay(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    if (isNaN(d)) return dateStr;
+    return `${d.getMonth() + 1}-р сарын ${d.getDate()}`;
+  }
+
+  function initials(name) {
+    return (name || 'ХАМТ').split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || 'ХД';
+  }
+
+  function logoColor(seed) {
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    return LOGO_COLORS[h % LOGO_COLORS.length];
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
+
+  // ---------- new / expired helpers ----------
+  const NEW_WINDOW_MS = 7 * 24 * 60 * 60 * 1000; // "Шинэ" = posted within the last 7 days
+
+  function isNewOpportunity(o) {
+    if (!o.created_at) return false;
+    const created = new Date(o.created_at);
+    if (isNaN(created)) return false;
+    return (Date.now() - created.getTime()) <= NEW_WINDOW_MS;
+  }
+
+  function isExpiredOpportunity(o) {
+    if (o.is_recurring || !o.event_date) return false;
+    const eventDate = new Date(o.event_date + 'T23:59:59');
+    if (isNaN(eventDate)) return false;
+    return eventDate.getTime() < Date.now();
+  }
+
+  // ---------- sign-up button ----------
+  function applyButtonHtml(o) {
+    const isFull = o.volunteers_needed && o.applicant_count >= o.volunteers_needed;
+
+    if (o.my_status === 'pending' || o.my_status === 'confirmed') {
+      return `<button type="button" class="btn-apply is-applied" data-cancel-id="${o.id}">✓ Бүртгүүлсэн</button>`;
+    }
+    if (o.my_status === 'completed') {
+      return `<button type="button" class="btn-apply is-applied" disabled>Дуусгасан</button>`;
+    }
+    if (isExpiredOpportunity(o)) {
+      return `<button type="button" class="btn-apply is-full" disabled>Хугацаа дууссан</button>`;
+    }
+    if (isFull) {
+      return `<button type="button" class="btn-apply is-full" disabled>Дүүрсэн</button>`;
+    }
+    return `<button type="button" class="btn-apply" data-apply-id="${o.id}">Бүртгүүлэх</button>`;
+  }
+
+  function cardHtml(o) {
+    const cat = CATEGORY_MAP[o.category] || CATEGORY_MAP.other;
+    const locationLine = o.location_type === 'online'
+      ? '💻 Онлайн'
+      : `📍 ${escapeHtml(o.location_label || 'Байршил тодорхойгүй')}`;
+    const dateLine = o.is_recurring
+      ? `🗓 ${escapeHtml(o.schedule_note || 'Тогтмол')}`
+      : `🗓 ${o.event_date ? formatMonthDay(o.event_date) : 'Огноо тодорхойгүй'}`;
+    const hoursLine = o.hours_estimate ? `<span>⏱ ${o.hours_estimate} цаг</span>` : '';
+    const timeLine = o.start_time
+      ? (o.end_time ? `<span>🕐 ${o.start_time.slice(0, 5)}–${o.end_time.slice(0, 5)}</span>` : `<span>🕐 ${o.start_time.slice(0, 5)}-с</span>`)
+      : '';
+    const ageBadgeText = (o.min_age != null && o.max_age != null) ? `${o.min_age}–${o.max_age}`
+      : o.min_age != null ? `${o.min_age}+`
+      : o.max_age != null ? `≤${o.max_age}`
+      : '';
+    const applicantText = o.volunteers_needed
+      ? `${o.applicant_count}/${o.volunteers_needed} хүн бүртгүүлсэн`
+      : `${o.applicant_count} хүн бүртгүүлсэн`;
+
+    const orgBadgeHtml = o.org_verification_status === 'verified'
+      ? `<span class="org-badge" data-status="verified">✅ Баталгаажсан</span>`
+      : o.org_verification_status === 'pending'
+      ? `<span class="org-badge" data-status="pending">⏳ Шалгаж байгаа</span>`
+      : `<span class="org-badge" data-status="unverified">Баталгаажаагүй</span>`;
+
+    return `
+      <article class="opp-card" data-opp-id="${o.id}">
+        <div class="opp-top">
+          <div class="org-logo" style="background:${logoColor(o.org_name)}">${initials(o.org_name)}</div>
+          <svg class="connector-knot" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 2C15.9 2 20 6.1 20 11C20 15.9 15.9 20 11 20C6.1 20 2 15.9 2 11C2 6.1 6.1 2 11 2Z" stroke="currentColor" stroke-width="1.3"/><path d="M11 2C11 8 8 11 2 11M11 2C11 8 14 11 20 11M11 20C11 14 8 11 2 11M11 20C11 14 14 11 20 11" stroke="currentColor" stroke-width="1.3"/></svg>
+          <div class="opp-top-right">
+            ${o.experience_required ? `<span class="exp-badge">🎓 Туршлага</span>` : ''}
+            ${ageBadgeText ? `<span class="age-badge">🔞 ${ageBadgeText} нас</span>` : ''}
+            <span class="opp-tag ${cat.tagClass}">${cat.label}</span>
+          </div>
+        </div>
+        <h3 class="opp-title">${escapeHtml(o.title)}</h3>
+        <p class="opp-org">${escapeHtml(o.org_name)}</p>
+        ${orgBadgeHtml}
+        <p class="opp-desc">${escapeHtml(o.description || '')}</p>
+        <div class="opp-meta">
+          <span>${locationLine}</span>
+          <span>${dateLine}</span>
+          ${timeLine}
+          ${hoursLine}
+        </div>
+        <div class="opp-bottom">
+          <div class="applicants">
+            <span class="applicants-count">${applicantText}</span>
+          </div>
+          <div class="opp-actions">
+            <a class="btn-manage" href="Ajil_delgerengui.html?id=${o.id}">Дэлгэрэнгүй</a>
+            <button type="button" class="btn-report-opp" data-report-opp-id="${o.id}" data-report-org-id="${o.org_id}" data-report-opp-title="${escapeHtml(o.title)}" title="Энэ ажлыг мэдээлэх">🚩</button>
+            ${applyButtonHtml(o)}
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function matchesFilters(o) {
+    if (activeFilter === 'new' && !isNewOpportunity(o)) return false;
+    if (activeFilter === 'active' && isExpiredOpportunity(o)) return false;
+    if (activeFilter === 'expired' && !isExpiredOpportunity(o)) return false;
+
+    if (locationQuery === 'Онлайн' && o.location_type !== 'online') return false;
+    if (locationQuery !== 'Бүх байршил' && locationQuery !== 'Онлайн') {
+      if (!(o.location_label || '').toLowerCase().includes(locationQuery.toLowerCase())) return false;
+    }
+
+    if (searchQuery) {
+      const haystack = `${o.title} ${o.description || ''} ${o.org_name}`.toLowerCase();
+      if (!haystack.includes(searchQuery.toLowerCase())) return false;
+    }
+
+    return true;
+  }
+
+  function renderFeed() {
+    const feed = document.getElementById('oppFeed');
+    const filtered = oppList.filter(matchesFilters);
+
+    if (filtered.length === 0) {
+      feed.innerHTML = `<p class="empty-state">${oppList.length === 0
+        ? 'Одоогоор нээлттэй сайн дурын ажил алга байна. Дараа дахин шалгаарай!'
+        : 'Энэ шүүлтүүрт тохирох ажил алга байна.'}</p>`;
+      return;
+    }
+
+    feed.innerHTML = filtered.map(cardHtml).join('');
+  }
+
+  function renderStats() {
+    const orgCount = new Set(oppList.map(o => o.org_id)).size;
+    const myCount = oppList.filter(o => o.my_status === 'pending' || o.my_status === 'confirmed').length;
+    document.getElementById('statOpen').textContent = oppList.length;
+    document.getElementById('statOrgs').textContent = orgCount;
+    document.getElementById('statMine').textContent = myCount;
+  }
+
+  function renderRecommendedOrgs() {
+    const counts = {};
+    oppList.forEach(o => {
+      const key = o.org_id;
+      if (!counts[key]) counts[key] = { name: o.org_name, count: 0 };
+      counts[key].count += 1;
+    });
+
+    const top = Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 3);
+    const list = document.getElementById('recommendedOrgs');
+
+    if (top.length === 0) {
+      list.innerHTML = `<li><p class="org-name">Одоогоор мэдээлэл алга</p></li>`;
+      return;
+    }
+
+    list.innerHTML = top.map(org => `
+      <li>
+        <span class="org-logo org-logo--sm" style="background:${logoColor(org.name)}">${initials(org.name)}</span>
+        <div>
+          <p class="org-name">${escapeHtml(org.name)}</p>
+          <p class="org-sub">${org.count} нээлттэй ажил</p>
+        </div>
+      </li>`).join('');
+  }
+
+  function renderProgress(myApplications) {
+    const hours = myApplications.reduce((sum, a) => sum + (Number(a.hours_logged) || 0), 0);
+    const pct = Math.min(100, Math.round((hours / HOURS_GOAL) * 100));
+    const remaining = Math.max(0, HOURS_GOAL - hours);
+
+    document.getElementById('progressValue').innerHTML = `${hours} <span>/ ${HOURS_GOAL} цаг</span>`;
+    document.getElementById('progressFill').style.width = `${pct}%`;
+    document.getElementById('progressNote').textContent = remaining > 0
+      ? `Энэ зорилтод хүрэхэд ${remaining} цаг үлдлээ. Ахиулцгаая!`
+      : 'Зорилтоо биелүүллээ! 🎉';
+  }
+
+  // ---------- data loading ----------
+  async function loadOpportunities() {
+    const feed = document.getElementById('oppFeed');
+    try {
+      const { data: opps, error } = await supabaseClient
+        .from('opportunities')
+        .select('*, org:organizations(org_name, verification_status)')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+
+      const ids = opps.map(o => o.id);
+      let counts = {};
+
+      if (ids.length) {
+        const { data: stats } = await supabaseClient
+          .from('opportunity_stats')
+          .select('*')
+          .in('opportunity_id', ids);
+        (stats || []).forEach(s => { counts[s.opportunity_id] = s.applicant_count; });
+      }
+
+      // My own applications (also used for the progress card / all-time hours)
+      const { data: apps, error: appsError } = await supabaseClient
+        .from('applications')
+        .select('opportunity_id, status, hours_logged')
+        .eq('volunteer_id', currentProfile.id);
+      if (appsError) throw appsError;
+
+      const myApplications = apps || [];
+      const myApps = {};
+      myApplications.forEach(a => { myApps[a.opportunity_id] = a.status; });
+
+      oppList = opps.map(o => ({
+        ...o,
+        org_name: (o.org && o.org.org_name) || 'Байгууллага',
+        org_verification_status: (o.org && o.org.verification_status) || null,
+        applicant_count: counts[o.id] || 0,
+        my_status: myApps[o.id] || null
+      }));
+
+      renderStats();
+      renderRecommendedOrgs();
+      renderProgress(myApplications);
+      renderFeed();
+    } catch (err) {
+      feed.innerHTML = `
+        <div class="error-state">
+          Ажлын мэдээллийг татахад алдаа гарлаа: ${escapeHtml(err.message || String(err))}<br>
+          Хэрэв энэ анх удаагаа бол Supabase дээр <code>opportunities</code> болон
+          <code>applications</code> хүснэгтийг үүсгэсэн эсэхээ шалгана уу.
+        </div>`;
+      console.error(err);
+    }
+  }
+
+  // ---------- sign up / cancel ----------
+  async function submitApplication(oppId, btn, extraFields) {
+    btn.disabled = true;
+    btn.textContent = 'Бүртгэж байна…';
+    try {
+      const { error } = await supabaseClient
+        .from('applications')
+        .upsert(
+          { opportunity_id: oppId, volunteer_id: currentProfile.id, status: 'pending', ...(extraFields || {}) },
+          { onConflict: 'opportunity_id,volunteer_id' }
+        );
+      if (error) throw error;
+      await loadOpportunities();
+    } catch (err) {
+      alert('Бүртгүүлэхэд алдаа гарлаа: ' + (err.message || String(err)));
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = 'Бүртгүүлэх';
+    }
+  }
+
+  function handleApply(oppId, btn) {
+    const o = oppList.find(x => String(x.id) === String(oppId));
+    if (o && o.experience_required) {
+      openApplyModal(oppId, btn, o);
+      return;
+    }
+    submitApplication(oppId, btn);
+  }
+
+  async function handleCancel(oppId, btn) {
+    if (!confirm('Энэ ажлаас бүртгэлээ цуцлах уу?')) return;
+    btn.disabled = true;
+    btn.textContent = 'Цуцалж байна…';
+    try {
+      const { error } = await supabaseClient
+        .from('applications')
+        .delete()
+        .eq('opportunity_id', oppId)
+        .eq('volunteer_id', currentProfile.id);
+      if (error) throw error;
+      await loadOpportunities();
+    } catch (err) {
+      alert('Цуцлахад алдаа гарлаа: ' + (err.message || String(err)));
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = '✓ Бүртгүүлсэн';
+    }
+  }
+
+  document.getElementById('oppFeed').addEventListener('click', (e) => {
+    const applyBtn = e.target.closest('[data-apply-id]');
+    if (applyBtn) { handleApply(applyBtn.getAttribute('data-apply-id'), applyBtn); return; }
+    const cancelBtn = e.target.closest('[data-cancel-id]');
+    if (cancelBtn) { handleCancel(cancelBtn.getAttribute('data-cancel-id'), cancelBtn); return; }
+  });
+
+  // ---------- filters / search ----------
+  document.querySelectorAll('.filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filters .chip').forEach(c => {
+        c.classList.remove('is-active');
+        c.setAttribute('aria-selected', 'false');
+      });
+      chip.classList.add('is-active');
+      chip.setAttribute('aria-selected', 'true');
+      activeFilter = chip.getAttribute('data-filter');
+      renderFeed();
+    });
+  });
+
+  document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    searchQuery = document.getElementById('searchInput').value.trim();
+    locationQuery = document.getElementById('locationSelect').value;
+    renderFeed();
+  });
+
+  // ---------- boot ----------
+  (async () => {
+    const session = await requireSession(); // redirects to login.html if not signed in
+    if (!session) return;
+
+    const profile = await getCurrentProfile();
+    if (!profile) return;
+
+    // Safety net: an org account landing here gets sent to its own home.
+    if (profile.role === 'org') {
+      window.location.href = 'Main_org.html';
+      return;
+    }
+
+    currentProfile = profile;
+    const name = [profile.first_name, profile.last_name].filter(Boolean).join(' ');
+    document.getElementById('greeting').textContent = `Сайн байна уу, ${name} 👋`;
+    const avatarEl = document.getElementById('avatarInitials');
+    if (profile.avatar_url) {
+      avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="">`;
+    } else {
+      avatarEl.textContent = initials(name);
+    }
+
+    await loadOpportunities();
+  })();
+
+  document.getElementById('logoutBtn').addEventListener('click', signOut);
+
+  // "Ажил нийтлэх" (Байгууллага мөн үү?) — a volunteer clicking this wants
+  // to register as an organization, so sign them out of the volunteer
+  // session first; otherwise organization_sign_up.html's own
+  // redirectIfLoggedIn() would just bounce them straight back here.
+  document.getElementById('orgSignupLink').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const confirmed = window.confirm('Байгууллага бүртгүүлэхийн тулд одоогийн бүртгэлээс гарах шаардлагатай. Үргэлжлүүлэх үү?');
+    if (!confirmed) return;
+    await supabaseClient.auth.signOut();
+    window.location.href = 'organization_sign_up.html';
+  });
+
+  // ---------- Report modal ----------
+  (() => {
+    const overlay = document.getElementById('reportModalOverlay');
+    const feed = document.getElementById('oppFeed');
+    const closeBtn = document.getElementById('reportModalClose');
+    const cancelBtn = document.getElementById('reportModalCancel');
+    const submitBtn = document.getElementById('reportSubmitBtn');
+    const titleEl = document.getElementById('reportModalTitle');
+    const reasonEl = document.getElementById('reportReason');
+    const detailsEl = document.getElementById('reportDetails');
+    const statusMsg = document.getElementById('reportStatusMsg');
+
+    let target = null; // { oppId, orgId }
+
+    function openModal() {
+      statusMsg.textContent = '';
+      statusMsg.style.color = '';
+      reasonEl.value = 'spam';
+      detailsEl.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Илгээх';
+      overlay.hidden = false;
+    }
+    function closeModal() { overlay.hidden = true; }
+
+    feed.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-report-opp-id]');
+      if (!btn) return;
+      target = { oppId: btn.dataset.reportOppId, orgId: btn.dataset.reportOrgId };
+      titleEl.textContent = `Мэдээлэх: ${btn.dataset.reportOppTitle || 'Ажил'}`;
+      openModal();
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+    submitBtn.addEventListener('click', async () => {
+      if (!target) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Илгээж байна…';
+      statusMsg.textContent = '';
+
+      const result = await reportOpportunity(target.oppId, target.orgId, reasonEl.value, detailsEl.value.trim());
+
+      if (result) {
+        statusMsg.style.color = '#166534';
+        statusMsg.textContent = 'Мэдээллийг хүлээн авлаа. Баярлалаа!';
+        submitBtn.textContent = 'Илгээсэн';
+        setTimeout(closeModal, 1400);
+      } else {
+        statusMsg.style.color = '#991B1B';
+        statusMsg.textContent = 'Илгээхэд алдаа гарлаа. Дахин оролдоно уу.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Илгээх';
+      }
+    });
+  })();
+
+  // ---------- Apply modal (experience-required opportunities) ----------
+  (() => {
+    const overlay = document.getElementById('applyModalOverlay');
+    const closeBtn = document.getElementById('applyModalClose');
+    const cancelBtn = document.getElementById('applyModalCancel');
+    const submitBtn = document.getElementById('applyModalSubmit');
+    const experienceEl = document.getElementById('applyExperience');
+    const motivationEl = document.getElementById('applyMotivation');
+    const experienceLabel = document.getElementById('applyExperienceLabel');
+    const motivationLabel = document.getElementById('applyMotivationLabel');
+    const statusMsg = document.getElementById('applyStatusMsg');
+
+    let target = null; // { oppId, btn }
+
+    window.openApplyModal = function (oppId, btn, opp) {
+      target = { oppId, btn };
+      statusMsg.textContent = '';
+      experienceEl.value = '';
+      motivationEl.value = '';
+      experienceLabel.textContent = (opp && opp.experience_question) || 'Өмнө ямар туршлага/ажил хийж байсан бэ?';
+      motivationLabel.textContent = (opp && opp.motivation_question) || 'Яагаад энэ ажилд нэгдэхийг хүсэж байна вэ?';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Бүртгүүлэх';
+      overlay.hidden = false;
+    };
+    function closeModal() { overlay.hidden = true; }
+
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+    submitBtn.addEventListener('click', async () => {
+      if (!target) return;
+      const experience = experienceEl.value.trim();
+      const motivation = motivationEl.value.trim();
+      if (!experience || !motivation) {
+        statusMsg.textContent = 'Хоёр асуултад хариулна уу.';
+        return;
+      }
+      statusMsg.textContent = '';
+      await submitApplication(target.oppId, target.btn, {
+        applicant_experience: experience,
+        applicant_motivation: motivation
+      });
+      closeModal();
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Миний идэвх — ХАМТ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Main_vol_s.css">
+<link rel="stylesheet" href="polish.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <a class="wordmark" href="Intro.html">
+      <img class="wordmark-knot" src="logo-badge.png" alt="ХАМТ лого" width="76" height="76" style="object-fit:contain;">
+      ХАМТ
+    </a>
+
+    <nav class="main-nav" aria-label="Үндсэн цэс">
+      <a class="nav-link" href="Main_vol.html">Сайн дурын ажлууд</a>
+      <a class="nav-link" href="Baiguullaguud_vol.html">Байгууллагууд</a>
+      <a class="nav-link is-active" href="Minii_idevh.html">Миний идэвх</a>
+    </nav>
+
+    <div class="topnav-actions">
+      <button class="icon-btn" aria-label="Мэдэгдэл">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M4 7.5a5.5 5.5 0 0 1 11 0c0 3.2 1 4.3 1.5 5H2.5c.5-.7 1.5-1.8 1.5-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 15.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn" id="logoutBtn" aria-label="Гарах" title="Гарах">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><path d="M7 2.5H4a1.5 1.5 0 0 0-1.5 1.5v10A1.5 1.5 0 0 0 4 15.5h3M12.5 12.5 16 9l-3.5-3.5M16 9H6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <a class="avatar" href="Profile_vol.html" aria-label="Профайл" id="avatarInitials">ХД</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow" id="greeting">Сайн байна уу 👋</p>
+      <h1 class="hero-title">Миний идэвх</h1>
+      <p class="hero-sub">Бүртгүүлсэн ажлууд, тэдгээрийн төлөв болон зориулсан нийт цагаа эндээс хараарай.</p>
+
+      <div class="stat-strip">
+        <div class="stat-pill"><strong id="statHours">–</strong><span>зориулсан цаг</span></div>
+        <div class="stat-pill"><strong id="statActive">–</strong><span>идэвхтэй ажил</span></div>
+        <div class="stat-pill"><strong id="statDone">–</strong><span>дууссан ажил</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="content-grid" style="grid-template-areas: 'filters filters' 'feed sidebar';">
+
+    <div class="filters" role="tablist" aria-label="Ажлын төлөв">
+      <button class="chip is-active" role="tab" aria-selected="true" data-filter="all">Бүгд</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="pending">Хүлээгдэж буй</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="confirmed">Баталгаажсан</button>
+      <button class="chip" role="tab" aria-selected="false" data-filter="completed">Дууссан</button>
+    </div>
+
+    <section class="feed" aria-label="Миний бүртгүүлсэн ажлууд" id="activityFeed" style="grid-area: feed;">
+      <p class="load-state">Ачааллаж байна…</p>
+    </section>
+
+    <aside class="sidebar" style="grid-area: sidebar;">
+      <div class="side-card side-card--progress">
+        <h4>Миний сайн дурын цаг</h4>
+        <p class="progress-value"><span id="progressHours">0</span> <span>/ 20 цаг</span></p>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <p class="progress-note" id="progressNote">Ачааллаж байна…</p>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>© 2026 ХАМТ. Сайн дурын ажилтан ба төрийн бус байгууллагыг холбох платформ.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script src="notifications-ui.js"></script>
+<script>
+  const STATUS_MAP = { pending: 'Хүлээгдэж буй', confirmed: 'Баталгаажсан', completed: 'Дууссан', cancelled: 'Цуцлагдсан' };
+  const STATUS_BADGE_CLASS = { pending: 'status-badge--pending', confirmed: 'status-badge--confirmed', completed: 'status-badge--done', cancelled: 'status-badge--done' };
+  const ORG_LOGO_COLORS = ['#3E6B4E', '#3E7CA6', '#C96A36', '#C99A3E', '#7A4FA3'];
+
+  let currentProfile = null;
+  let activities = [];
+  let activeFilter = 'all';
+  let issuedCerts = {}; // application_id -> { url, issued_at } for completed activities
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function initialsFromName(name) {
+    return (name || '').split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '??';
+  }
+
+  function orgColor(name) {
+    let hash = 0;
+    for (const ch of (name || '')) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+    return ORG_LOGO_COLORS[hash % ORG_LOGO_COLORS.length];
+  }
+
+  function formatMonthDay(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    if (isNaN(d)) return dateStr;
+    return `${d.getMonth() + 1}-р сарын ${d.getDate()}`;
+  }
+
+  function scheduleLine(o) {
+    if (!o) return '';
+    if (o.is_recurring) return o.schedule_note || 'Тогтмол';
+    return o.event_date ? formatMonthDay(o.event_date) : 'Огноо тодорхойгүй';
+  }
+
+  // ---------- rendering ----------
+
+  function rowHtml(a) {
+    const o = a.opportunity || {};
+    const org = o.organization || {};
+    const badgeClass = STATUS_BADGE_CLASS[a.status] || 'status-badge--pending';
+    const statusLabel = STATUS_MAP[a.status] || a.status;
+
+    let actionHtml = '';
+    if (a.status === 'completed') {
+      const cert = issuedCerts[a.id];
+      actionHtml = cert
+        ? `<a class="btn-cert" href="${escapeHtml(cert.url)}" target="_blank" rel="noopener">Гэрчилгээ татах ↗</a>`
+        : `<span class="cert-hint">Байгууллага гэрчилгээ хараахан олгоогүй байна</span>`;
+    } else if (a.status === 'pending') {
+      actionHtml = `<span class="cert-hint">Байгууллагын баталгаажуулалтыг хүлээж байна</span>`;
+    } else if (a.status === 'confirmed') {
+      actionHtml = `<span class="cert-hint">Ажлаа дуусгах хүртэл хүлээнэ үү</span>`;
+    }
+
+    return `
+      <div class="member-row" data-status="${a.status}">
+        <span class="member-avatar" style="background:${orgColor(org.org_name)}; color:#fff;">${initialsFromName(org.org_name)}</span>
+        <div class="member-info">
+          <p class="member-name">${escapeHtml(o.title || 'Ажил устгагдсан')}</p>
+          <p class="member-role">${escapeHtml(org.org_name || '')} · ${escapeHtml(scheduleLine(o))}</p>
+        </div>
+        <div class="member-action-group">
+          <span class="status-badge ${badgeClass}">${statusLabel}</span>
+          ${actionHtml}
+        </div>
+      </div>`;
+  }
+
+  function renderFeed() {
+    const feed = document.getElementById('activityFeed');
+    const filtered = activeFilter === 'all' ? activities : activities.filter(a => a.status === activeFilter);
+
+    if (filtered.length === 0) {
+      feed.innerHTML = `<div class="empty-state">${activities.length === 0
+        ? 'Та одоогоор ямар ч ажилд бүртгүүлээгүй байна. "Сайн дурын ажлууд" хуудаснаас нэгийг сонгоорой!'
+        : 'Энэ төлөвт тохирох ажил алга.'}</div>`;
+      return;
+    }
+
+    feed.innerHTML = `<div class="member-panel">${filtered.map(rowHtml).join('')}</div>`;
+  }
+
+  function renderStats(summary) {
+    document.getElementById('statHours').textContent = summary.totalHours;
+    document.getElementById('statActive').textContent = summary.activeCount;
+    document.getElementById('statDone').textContent = summary.doneCount;
+
+    document.getElementById('progressHours').textContent = summary.totalHours;
+    const pct = Math.min(100, Math.round((summary.totalHours / 20) * 100));
+    document.getElementById('progressFill').style.width = pct + '%';
+    const remaining = Math.max(0, 20 - summary.totalHours);
+    document.getElementById('progressNote').textContent = remaining > 0
+      ? `Энэ улиралд ${remaining} цаг үлдлээ. Ахиулцгаая!`
+      : `20 цагийн зорилгодоо хүрлээ! 🎉`;
+  }
+
+  async function loadActivities() {
+    const feed = document.getElementById('activityFeed');
+    try {
+      const summary = await getMyHoursSummary();
+      activities = summary.activities;
+
+      const certs = await getMyCertificates();
+      issuedCerts = {};
+      const orphanCerts = [];
+      certs.forEach(c => {
+        if (c.application_id) {
+          issuedCerts[c.application_id] = c;
+        } else {
+          // application_id is null once the underlying application row
+          // has been cascade-deleted (e.g. the organization deleted its
+          // account) — see fix_certificate_cascade.sql. The certificate
+          // itself still exists, it just has nothing left to hang off of
+          // in `activities`, so it would otherwise silently vanish from
+          // this page. Collect it to splice in below.
+          orphanCerts.push(c);
+        }
+      });
+
+      // Give each orphaned certificate a synthetic "completed" row, using
+      // the org/job name snapshotted at issue time (getMyCertificates
+      // already falls back to those when the live opportunity/org is gone).
+      orphanCerts.forEach(c => {
+        const syntheticId = `cert-${c.id}`;
+        activities.push({
+          id: syntheticId,
+          status: 'completed',
+          hours_logged: c.hours_logged, // snapshotted at issue time; null for certs issued before that fix
+          opportunity: {
+            title: c.displayOpportunityTitle,
+            organization: { org_name: c.displayOrgName },
+          },
+        });
+        issuedCerts[syntheticId] = c;
+        if (c.hours_logged != null) summary.totalHours += Number(c.hours_logged);
+      });
+      summary.doneCount += orphanCerts.length;
+
+      renderStats(summary);
+      renderFeed();
+    } catch (err) {
+      feed.innerHTML = `<div class="error-state">Мэдээллийг татахад алдаа гарлаа: ${escapeHtml(err.message || String(err))}</div>`;
+      console.error(err);
+    }
+  }
+
+  // ---------- filter chips ----------
+  document.querySelectorAll('.filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filters .chip').forEach(c => {
+        c.classList.remove('is-active');
+        c.setAttribute('aria-selected', 'false');
+      });
+      chip.classList.add('is-active');
+      chip.setAttribute('aria-selected', 'true');
+      activeFilter = chip.getAttribute('data-filter');
+      renderFeed();
+    });
+  });
+
+  // ---------- boot ----------
+  (async () => {
+    const session = await requireSession();
+    if (!session) return;
+
+    const profile = await getCurrentProfile();
+    if (!profile) return;
+
+    if (profile.role === 'org') {
+      window.location.href = 'Main_org.html';
+      return;
+    }
+
+    currentProfile = profile;
+    const name = [profile.first_name, profile.last_name].filter(Boolean).join(' ');
+    document.getElementById('greeting').textContent = `Сайн байна уу, ${name} 👋`;
+    const avatarEl = document.getElementById('avatarInitials');
+    if (profile.avatar_url) {
+      avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="">`;
+    } else {
+      avatarEl.textContent = initialsFromName(name) || 'ХД';
+    }
+
+    await loadActivities();
+  })();
+
+  document.getElementById('logoutBtn').addEventListener('click', signOut);
+</script>
+
+</body>
+</html>

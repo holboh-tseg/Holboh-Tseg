@@ -1,0 +1,218 @@
+/* ==========================================================================
+   ☀️/🌙 Manai_tukhai_s.css — page-specific styles for the "about" profile
+   layout (about-profile-header, about-avatar-lg, info-card, edit-mode form
+   fields, etc.) plus a few targeted bug fixes.
+
+   This file is loaded AFTER the active theme file (Main_org_s.css on sun
+   pages, Main_vol_s.css on moon pages) and BEFORE polish.css. It used to
+   also carry a full duplicate copy of the whole site theme (topnav, hero,
+   avatar, :root palette, buttons, cards...) hardcoded to the sun colors.
+   That duplicate block has been removed: it was redundant on the org
+   pages (Main_org_s.css already provides all of it) and actively broke
+   theming on Baiguullaga_profile_vol.html, because its :root block
+   overwrote every moon-theme variable Main_vol_s.css had just set,
+   and its hardcoded amber rules overrode the moon equivalents too.
+
+   Everything below uses var(--token, fallback), so it correctly follows
+   whichever theme file is actually loaded on the page.
+   ========================================================================== */
+
+/* Fix: hero subtitle was being hidden/overridden by something in
+   Main_org_s.css. Force it visible regardless of what's colliding.
+   It also sits on the dark part of the hero's gradient background, and
+   dark text on dark was unreadable — so give it its own light "card"
+   behind it instead of just recoloring the text. */
+.hero-sub{
+  display:inline-block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:relative !important;
+  z-index:5 !important;
+  color:var(--ink-soft, #4A5C6B);
+  background:var(--paper, #F6F1E5);
+  padding:10px 16px;
+  border-radius:var(--radius-sm, 8px);
+  box-shadow:0 4px 14px rgba(0,0,0,0.12);
+}
+
+/* Fix: .btn-ghost (Main_org_s.css) never sets a background, so the
+   "Профайл засах" button fell back to the browser's default white
+   button face — white text on a white button. Make it transparent so
+   the dark card behind it (.side-card--dark) shows through instead. */
+#editToggleBtn{
+  background:transparent !important;
+}
+
+/* Fix: the small top-nav avatar (.avatar, top-right of every page) had no
+   overflow:hidden and no sizing rule for the <img> that setAvatarEl() inserts
+   after an upload — so the photo rendered at full natural size instead of
+   34x34px and burst out of the circle in the top-right corner. */
+.avatar{
+  overflow:hidden;
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Fix: Main_org_s.css has its own modal system that keeps .modal-overlay
+   at opacity:0 / pointer-events:none until a JS-added .is-open class
+   turns it on. The delete-account modal here doesn't use that class —
+   it just toggles the [hidden] attribute — so without this override the
+   modal was opening invisibly and unclickably underneath everything
+   (looked like the delete button did nothing at all). */
+.modal-overlay:not([hidden]){
+  opacity:1 !important;
+  pointer-events:auto !important;
+}
+
+/* ---------- prominent profile header (avatar + name) ---------- */
+
+.about-profile-header{
+  display:flex;
+  align-items:center;
+  gap:24px;
+  max-width:1120px;
+  margin:0 auto 32px;
+  padding:0 24px;
+}
+
+.about-avatar-lg{
+  width:104px;
+  height:104px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:34px;
+  color:var(--white, #fff);
+  background:var(--ink);
+  overflow:hidden;
+  flex-shrink:0;
+  box-shadow:0 6px 18px rgba(32,48,63,0.14);
+}
+.about-avatar-lg img{ width:100%; height:100%; object-fit:cover; }
+
+.about-profile-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(24px, 3vw, 34px);
+  margin:0 0 8px;
+  color:var(--ink, #20303F);
+}
+
+/* ---------- avatar picker in edit mode ---------- */
+
+.about-avatar-row{
+  display:flex; align-items:center; gap:16px; margin-bottom:24px;
+}
+.about-avatar{
+  width:88px; height:88px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:600; font-size:28px;
+  color:var(--white, #fff); background:var(--ink);
+  overflow:hidden; flex-shrink:0;
+}
+.about-avatar img{ width:100%; height:100%; object-fit:cover; }
+.avatar-upload-btn{
+  font-size:13px; font-weight:600; color:var(--ink);
+  background:none; border:1px solid var(--line, rgba(32,48,63,0.14));
+  border-radius:var(--radius-sm, 8px); padding:8px 14px; cursor:pointer;
+}
+.avatar-upload-btn:hover{ background:var(--paper-dim, #ECE4D2); }
+
+/* ---------- form fields (edit mode) ---------- */
+
+.about-field{ margin-bottom:20px; }
+.about-field label{
+  display:block; font-size:13px; font-weight:600;
+  color:var(--ink, #20303F); margin-bottom:6px;
+}
+.about-field textarea,
+.about-field input[type="text"],
+.about-field input[type="url"],
+.about-field select{
+  width:100%; padding:10px 12px; font-family:var(--font-body);
+  font-size:14px; color:var(--ink, #20303F);
+  border:1.5px solid var(--line, rgba(32,48,63,0.14));
+  border-radius:var(--radius-sm, 8px); resize:vertical;
+}
+.about-field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.about-hint{ font-size:12px; color:var(--ink-soft, #4A5C6B); margin-top:4px; }
+
+.chip-list{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+.chip{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--paper-dim, #ECE4D2); border-radius:999px;
+  padding:6px 10px 6px 12px; font-size:13px; font-weight:600;
+}
+.chip button{
+  background:none; border:none; cursor:pointer; color:var(--ink-soft, #4A5C6B);
+  font-size:14px; line-height:1; padding:0;
+}
+
+.edit-row{
+  display:grid; grid-template-columns:140px 1fr auto; gap:10px;
+  align-items:start; margin-bottom:10px;
+}
+.edit-row input{
+  padding:9px 11px; font-family:var(--font-body); font-size:13.5px;
+  border:1.5px solid var(--line, rgba(32,48,63,0.14));
+  border-radius:var(--radius-sm, 8px);
+}
+.row-remove{
+  background:none; border:none; cursor:pointer; color:var(--sunset, #C96A36);
+  font-size:18px; line-height:1; padding:8px 4px;
+}
+.row-add{
+  font-size:13px; font-weight:600; color:var(--ink);
+  background:none; border:1px dashed var(--line, rgba(32,48,63,0.14));
+  border-radius:var(--radius-sm, 8px); padding:9px 14px; cursor:pointer;
+  width:100%; margin-top:2px;
+}
+.row-add:hover{ background:var(--paper-dim, #ECE4D2); }
+
+.about-actions{ display:flex; gap:10px; margin-top:28px; }
+.btn-save{
+  font-family:inherit; font-weight:700; font-size:14px;
+  color:var(--white, #fff); background:var(--ink);
+  border:none; border-radius:var(--radius-sm, 8px);
+  padding:11px 22px; cursor:pointer;
+}
+.btn-save:disabled{ opacity:0.6; cursor:default; }
+.btn-cancel{
+  font-family:inherit; font-weight:600; font-size:14px;
+  color:var(--ink-soft, #4A5C6B); background:none;
+  border:1px solid var(--line, rgba(32,48,63,0.14));
+  border-radius:var(--radius-sm, 8px); padding:11px 22px; cursor:pointer;
+}
+#aboutSaveMsg{ font-size:13px; font-weight:600; margin-top:12px; display:none; }
+
+/* ---------- view mode ---------- */
+
+.about-empty{ color:var(--ink-soft, #4A5C6B); font-size:14.5px; }
+
+.about-meta{ display:flex; gap:10px; flex-wrap:wrap; }
+.about-meta span{
+  font-size:13px; font-weight:600; color:var(--ink-soft, #4A5C6B);
+  background:var(--paper-dim, #ECE4D2); border-radius:999px; padding:6px 14px;
+}
+
+.info-card{
+  background:var(--white, #fff); border:1px solid var(--line, rgba(32,48,63,0.14));
+  border-radius:var(--radius-lg, 24px); padding:24px; margin-bottom:20px;
+}
+.info-card h4{ margin:0 0 14px; font-family:var(--font-display); font-size:15px; }
+.info-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; font-size:13.5px; border-top:1px solid var(--line, rgba(32,48,63,0.14)); }
+.info-row:first-of-type{ border-top:none; }
+.info-row span:first-child{ color:var(--ink-soft, #4A5C6B); }
+.info-row a{ color:var(--ink); font-weight:600; text-decoration:none; }
+.info-row a:hover{ text-decoration:underline; }
+
+@media (max-width: 700px){
+  .about-profile-header{ flex-direction:column; align-items:flex-start; text-align:left; }
+  .about-field-row{ grid-template-columns:1fr; }
+}

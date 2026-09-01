@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Нэвтрэх — ХҮРТЭЭМЖ</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Login_s.css">
+</head>
+<body>
+
+<div class="login-page">
+
+  <a class="back-link" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L4 8l6 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Эхлэх рүү буцах
+  </a>
+
+  <!-- Brand panel -->
+  <aside class="brand-panel">
+    <svg class="knot-field" viewBox="0 0 600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <pattern id="knotPattern" width="120" height="120" patternUnits="userSpaceOnUse">
+          <path class="knot-line" d="M10,60 C10,30 30,10 60,10 C90,10 110,30 110,60 C110,90 90,110 60,110 C30,110 10,90 10,60 Z" />
+          <path class="knot-line" d="M60,10 C60,40 40,60 10,60 M60,10 C60,40 80,60 110,60 M60,110 C60,80 40,60 10,60 M60,110 C60,80 80,60 110,60" />
+        </pattern>
+      </defs>
+      <rect width="600" height="900" fill="url(#knotPattern)" />
+    </svg>
+
+    <!-- Signature: the wordmark's knot, scaled up as a soft breathing watermark -->
+    <img class="knot-watermark" src="logo-badge.png" alt="" aria-hidden="true">
+
+    <div class="brand-content">
+      <a class="wordmark" href="index.html">
+        <img class="wordmark-knot" src="logo-badge.png" alt="ХАМТ лого" width="80" height="80" style="object-fit:contain;">
+        ХҮРТЭЭМЖ
+      </a>
+
+      <p class="brand-eyebrow">Сайн дурын платформ</p>
+      <h1 class="brand-headline">Тавтай морил!</h1>
+      <p class="brand-tagline"> Нийгэмдээ өөрийн хувь нэмрээ оруулаарай.<br> <br> Холбогдож, оролцож, өөрчлөлт бүтээгээрэй.<br></p>
+
+      <dl class="brand-stats">
+        <div class="stat">
+          <dt id="statVolunteers">–</dt>
+          <dd>сайн дурын ажилтан</dd>
+        </div>
+        <div class="stat">
+          <dt id="statOrgs">–</dt>
+          <dd>байгууллага</dd>
+        </div>
+        <div class="stat">
+          <dt id="statHours">–</dt>
+          <dd>сайн дурын цаг</dd>
+        </div>
+      </dl>
+    </div>
+  </aside>
+
+  <!-- Form panel -->
+  <main class="form-panel">
+    <div class="form-card">
+
+      <div class="role-tabs" role="tablist" aria-label="Хэрэглэгчийн төрөл">
+        <span class="tab-slider" aria-hidden="true"></span>
+        <button class="role-tab is-active" type="button" role="tab" aria-selected="true" data-role="volunteer">
+          Сайн дурын ажилтан
+        </button>
+        <button class="role-tab" type="button" role="tab" aria-selected="false" data-role="org">
+          Байгууллага
+        </button>
+      </div>
+
+      <h2 class="form-title">Тавтай морил</h2>
+      <p class="form-subtitle">Бүртгэлдээ нэвтэрч, боломжуудаа үргэлжлүүлнэ үү.</p>
+
+      <p id="formMessage" style="display:none; margin:0 0 16px; padding:10px 14px; border-radius:8px; font-size:13.5px; font-weight:600;"></p>
+
+      <form class="login-form" id="loginForm" action="#" method="post">
+        <div class="field">
+          <label for="email">Имэйл хаяг</label>
+          <div class="field-input">
+            <svg class="field-icon" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5.5h14a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4"/><path d="m2.5 6 7.5 5.5L17.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="email" name="email" type="email" placeholder="tanii@jishee.mn" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Нууц үг</label>
+          <div class="password-wrap">
+            <svg class="field-icon" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 9V6.5a3.5 3.5 0 0 1 7 0V9" stroke="currentColor" stroke-width="1.4"/></svg>
+            <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+            <button class="toggle-visibility" type="button" aria-label="Нууц үг харуулах">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6Z" stroke="currentColor" stroke-width="1.4"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label class="checkbox">
+            <input type="checkbox" name="remember">
+            <span>Намайг сана</span>
+          </label>
+          <a class="link-muted" href="Forgot_password.html">Нууц үгээ мартсан уу?</a>
+        </div>
+
+        <button class="btn-primary" type="submit">
+          Нэвтрэх
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+
+      <div class="divider"><span>эсвэл</span></div>
+
+      <button class="btn-secondary" type="button">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.6 9.2c0-.6-.05-1.2-.15-1.8H9v3.4h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.55 2.7-3.85 2.7-6.5Z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.17l-2.9-2.25c-.8.55-1.85.87-3.06.87-2.35 0-4.34-1.58-5.05-3.71H.95v2.32A9 9 0 0 0 9 18Z"/><path fill="#FBBC05" d="M3.95 10.74A5.4 5.4 0 0 1 3.66 9c0-.6.1-1.2.29-1.74V4.94H.95A9 9 0 0 0 0 9c0 1.45.35 2.83.95 4.06l3-2.32Z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.42 0 9 0A9 9 0 0 0 .95 4.94l3 2.32C4.66 5.16 6.65 3.58 9 3.58Z"/></svg>
+        Google-ээр нэвтрэх
+      </button>
+
+      <p class="form-footnote">
+        Бүртгэлгүй байна уу?
+        <a href="volunteer_sign_up.html" id="volunteerSignupLink">Сайн дурын ажилтнаар</a>
+        ·
+        <a href="organization_sign_up.html" id="orgSignupLink">Байгууллагаар</a>
+      </p>
+    </div>
+  </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  // Tabs pick which theme shows and which role the login form will accept —
+  // the actual role check against the signed-in account's profile happens
+  // in the submit handler below.
+  const tabs = document.querySelectorAll('.role-tab');
+  const slider = document.querySelector('.tab-slider');
+
+  function moveSliderTo(tab) {
+    slider.style.width = tab.offsetWidth + 'px';
+    slider.style.transform = `translateX(${tab.offsetLeft}px)`;
+  }
+
+  const page = document.querySelector('.login-page');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected','true');
+      moveSliderTo(tab);
+      page.dataset.role = tab.dataset.role;
+    });
+  });
+
+  // Set the slider's starting position/size once fonts have laid out.
+  window.addEventListener('load', () => moveSliderTo(document.querySelector('.role-tab.is-active')));
+
+  const toggle = document.querySelector('.toggle-visibility');
+  const pwd = document.getElementById('password');
+  toggle.addEventListener('click', () => {
+    pwd.type = pwd.type === 'password' ? 'text' : 'password';
+  });
+
+  // If already logged in, skip straight to the right home page.
+  redirectIfLoggedIn();
+
+  // Brand-panel stats (volunteer/org counts, total hours) — public
+  // aggregate numbers, fetched even before anyone signs in. If the call
+  // fails for any reason, leave the "–" placeholders rather than show a
+  // wrong number.
+  function formatThousands(n) {
+    return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  (async () => {
+    const stats = await getPlatformStats();
+    if (!stats) return;
+    document.getElementById('statVolunteers').textContent = `${formatThousands(stats.volunteerCount)}+`;
+    document.getElementById('statOrgs').textContent = `${formatThousands(stats.organizationCount)}+`;
+    document.getElementById('statHours').textContent = formatThousands(stats.totalHours);
+  })();
+
+  const form = document.getElementById('loginForm');
+  const msg = document.getElementById('formMessage');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  function showMessage(text, isError) {
+    msg.textContent = text;
+    msg.style.display = 'block';
+    msg.style.background = isError ? 'rgba(201,106,54,0.12)' : 'rgba(62,107,78,0.12)';
+    msg.style.color = isError ? '#C96A36' : '#3E6B4E';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.style.display = 'none';
+
+    const email = document.getElementById('email').value.trim();
+    const password = pwd.value;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Нэвтэрч байна…';
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      showMessage('Нэвтрэхэд алдаа гарлаа: имэйл эсвэл нууц үг буруу байна.', true);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Нэвтрэх <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      return;
+    }
+
+    // Route to the right home page depending on who just signed in.
+    if (await isCurrentUserAdmin()) {
+      window.location.href = 'Admin_review.html';
+      return;
+    }
+
+    const profile = await getCurrentProfile();
+    const selectedRole = page.dataset.role || 'volunteer';
+
+    if (profile && profile.role && profile.role !== selectedRole) {
+      await supabaseClient.auth.signOut();
+      const wrongTabMsg = selectedRole === 'org'
+        ? 'Энэ имэйл байгууллагын бүртгэл биш байна. "Сайн дурын ажилтан" табыг сонгоод дахин оролдоно уу.'
+        : 'Энэ имэйл сайн дурын ажилтны бүртгэл биш байна. "Байгууллага" табыг сонгоод дахин оролдоно уу.';
+      showMessage(wrongTabMsg, true);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Нэвтрэх <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      return;
+    }
+
+    if (profile && profile.role === 'org' && profile.banned) {
+      await supabaseClient.auth.signOut();
+      showMessage('Энэ байгууллагын бүртгэл түр хаагдсан байна.', true);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Нэвтрэх <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      return;
+    }
+
+    window.location.href = (profile && profile.role === 'org') ? 'Main_org.html' : 'Main_vol.html';
+  });
+
+  document.querySelector('.btn-secondary').addEventListener('click', () => {
+    showMessage('Google-ээр нэвтрэх түр хаалттай байна. Имэйлээр нэвтэрнэ үү.', true);
+  });
+</script>
+
+</body>
+</html>

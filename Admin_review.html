@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Байгууллага баталгаажуулах — ХҮРТЭЭМЖ (Admin)</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Main_org_s.css">
+<style>
+  .admin-tabs { display: flex; gap: 8px; max-width: 720px; margin: 0 auto 20px; }
+  .admin-tab {
+    flex: 1; border: 1px solid #e5e7eb; background: #fff; border-radius: 10px;
+    padding: 10px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    color: #6b7280;
+  }
+  .admin-tab.is-active { background: #20303F; color: #fff; border-color: #20303F; }
+  .admin-tab .count { opacity: 0.75; font-weight: 500; }
+
+  .review-list { display: flex; flex-direction: column; gap: 16px; max-width: 720px; margin: 0 auto; }
+  .review-card {
+    border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px;
+    background: #fff;
+  }
+  .review-card[data-banned="true"] { border-color: #991b1b; background: #fef2f2; }
+  .review-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .review-name { font-weight: 600; font-size: 1.05rem; margin: 0; display: flex; align-items: center; gap: 8px; }
+  .review-meta { font-size: 0.85rem; color: #6b7280; margin: 4px 0 12px; }
+  .review-about { font-size: 0.9rem; color: #374151; margin: 0 0 14px; }
+  .review-links a {
+    display: inline-block; margin-right: 12px; font-size: 0.85rem;
+    color: #3E7CA6; text-decoration: none;
+  }
+  .review-links a:hover { text-decoration: underline; }
+  .review-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .review-notes {
+    width: 100%; margin-top: 10px; font-size: 0.85rem;
+    border: 1px solid #d1d5db; border-radius: 8px; padding: 8px;
+    font-family: inherit; resize: vertical; min-height: 40px;
+  }
+  button.pill {
+    border: none; border-radius: 8px; padding: 8px 16px;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  .btn-verify { background: #d1fae5; color: #065f46; }
+  .btn-verify:hover { background: #a7f3d0; }
+  .btn-reject { background: #fee2e2; color: #991b1b; }
+  .btn-reject:hover { background: #fecaca; }
+  .btn-revert { background: #f3f4f6; color: #374151; }
+  .btn-revert:hover { background: #e5e7eb; }
+  .btn-ban { background: #991b1b; color: #fff; }
+  .btn-ban:hover { background: #7f1d1d; }
+  .btn-unban { background: #f3f4f6; color: #374151; }
+  .btn-unban:hover { background: #e5e7eb; }
+  .banned-tag {
+    font-size: 0.7rem; font-weight: 700; color: #991b1b; background: #fee2e2;
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .report-reason-tag {
+    font-size: 0.7rem; font-weight: 700; color: #92400e; background: #fef3c7;
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .report-status-tag {
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  }
+  .report-status-tag[data-status="open"] { color: #92400e; background: #fef3c7; }
+  .report-status-tag[data-status="resolved"] { color: #065f46; background: #d1fae5; }
+  .report-status-tag[data-status="dismissed"] { color: #6b7280; background: #f3f4f6; }
+  .report-status-tag[data-status="new"] { color: #92400e; background: #fef3c7; }
+  .report-status-tag[data-status="read"] { color: #1d4ed8; background: #dbeafe; }
+  .report-status-tag[data-status="archived"] { color: #6b7280; background: #f3f4f6; }
+  .btn-dismiss { background: #f3f4f6; color: #374151; }
+  .btn-dismiss:hover { background: #e5e7eb; }
+  .btn-resolve { background: #d1fae5; color: #065f46; }
+  .btn-resolve:hover { background: #a7f3d0; }
+
+  .empty-state, .load-state, .error-state {
+    text-align: center; color: #6b7280; padding: 40px 0;
+  }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <a class="wordmark" href="Admin_review.html">ХҮРТЭЭМЖ · Admin</a>
+    <div class="topnav-actions">
+      <button class="icon-btn" id="logoutBtn" aria-label="Гарах" title="Гарах">Гарах</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">Байгууллага баталгаажуулах</h1>
+      <p class="hero-sub">Шалгах: байгууллагын вэбсайт, Instagram, Facebook хуудсыг үзээд баталгаажуулна уу.</p>
+    </div>
+  </section>
+
+  <section class="section-block" style="padding-top:24px;">
+    <div class="admin-tabs" role="tablist">
+      <button class="admin-tab is-active" data-tab="pending" role="tab">Хүлээгдэж буй <span class="count" id="countPending"></span></button>
+      <button class="admin-tab" data-tab="verified" role="tab">Баталгаажсан <span class="count" id="countVerified"></span></button>
+      <button class="admin-tab" data-tab="rejected" role="tab">Бүү итгэ <span class="count" id="countRejected"></span></button>
+      <button class="admin-tab" data-tab="reports" role="tab">Report <span class="count" id="countReports"></span></button>
+      <button class="admin-tab" data-tab="feedback" role="tab">Санал хүсэлт <span class="count" id="countFeedback"></span></button>
+    </div>
+
+    <div class="review-list" id="reviewList">
+      <p class="load-state">Ачааллаж байна…</p>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  let allOrgs = [];
+  let allReports = [];
+  let allFeedback = [];
+  let activeTab = 'pending';
+
+  const REPORT_REASON_LABELS_FALLBACK = {
+    spam: 'Спам / хуурамч',
+    scam: 'Луйвар / мөнгө шаардсан',
+    inappropriate: 'Зохисгүй контент',
+    no_show: 'Ажил зарлаад юу ч хийгээгүй',
+    other: 'Бусад шалтгаан',
+  };
+  function reasonLabel(reason) {
+    return (typeof REPORT_REASON_LABELS !== 'undefined' && REPORT_REASON_LABELS[reason])
+      || REPORT_REASON_LABELS_FALLBACK[reason]
+      || reason;
+  }
+  function reportStatusLabel(status) {
+    if (status === 'resolved') return '✅ Шийдэгдсэн';
+    if (status === 'dismissed') return '🚫 Хаясан';
+    return '⏳ Хүлээгдэж буй';
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  // Renders any link-ish field the org row might have. Adjust the list
+  // below to match whatever columns you actually store.
+  function linkFields(org) {
+    const candidates = [
+      { key: 'website', label: '🌐 Вэбсайт' },
+      { key: 'instagram_url', label: '📷 Instagram' },
+      { key: 'facebook_url', label: '📘 Facebook' },
+      { key: 'contact_email', label: '✉️ И-мэйл' },
+      { key: 'phone', label: '📞 Утас' },
+    ];
+    return candidates
+      .filter(c => org[c.key])
+      .map(c => {
+        const val = org[c.key];
+        const isUrl = /^https?:\/\//.test(val);
+        return isUrl
+          ? `<a href="${escapeHtml(val)}" target="_blank" rel="noopener">${c.label}</a>`
+          : `<span>${c.label}: ${escapeHtml(val)}</span>`;
+      })
+      .join('');
+  }
+
+  function actionsHtml(org) {
+    const status = org.verification_status;
+    let buttons = '';
+
+    if (status === 'pending') {
+      buttons = `
+        <button class="pill btn-verify" data-action="verify">✅ Баталгаажуулах</button>
+        <button class="pill btn-reject" data-action="reject">🚫 Бүү итгэ</button>
+      `;
+    } else if (status === 'verified') {
+      buttons = `
+        <button class="pill btn-reject" data-action="reject">🚫 Бүү итгэ болгох</button>
+        <button class="pill btn-revert" data-action="revert">↩️ Хүлээгдэж буй болгох</button>
+      `;
+    } else if (status === 'rejected') {
+      buttons = `
+        <button class="pill btn-revert" data-action="revert">↩️ Хүлээгдэж буй болгох</button>
+        ${org.banned
+          ? `<button class="pill btn-unban" data-action="unban">🔓 Хориг цуцлах</button>`
+          : `<button class="pill btn-ban" data-action="ban">🔨 Акаунт хориглох</button>`}
+      `;
+    }
+    return buttons;
+  }
+
+  function cardHtml(org) {
+    return `
+      <div class="review-card" data-org-id="${org.id}" data-banned="${!!org.banned}">
+        <div class="review-top">
+          <div>
+            <p class="review-name">
+              ${escapeHtml(org.org_name)}
+              ${org.banned ? '<span class="banned-tag">ХОРИГЛОСОН</span>' : ''}
+            </p>
+            <p class="review-meta">${escapeHtml(org.city || 'Хот тодорхойгүй')}</p>
+          </div>
+        </div>
+        <p class="review-about">${escapeHtml(org.about || 'Тайлбар байхгүй.')}</p>
+        <div class="review-links">${linkFields(org) || '<span>Холбоос олдсонгүй — гараар хайж шалгана уу.</span>'}</div>
+        <textarea class="review-notes" placeholder="Тэмдэглэл…">${escapeHtml(org.verification_notes || '')}</textarea>
+        <div class="review-actions">${actionsHtml(org)}</div>
+      </div>
+    `;
+  }
+
+  function reportActionsHtml(report) {
+    if (report.status === 'open') {
+      return `
+        <button class="pill btn-resolve" data-report-action="resolved">✅ Шийдсэн</button>
+        <button class="pill btn-dismiss" data-report-action="dismissed">🚫 Хаях</button>
+      `;
+    }
+    return `<button class="pill btn-revert" data-report-action="open">↩️ Дахин нээх</button>`;
+  }
+
+  function reportCardHtml(report) {
+    const org = report.organization || {};
+    const opp = report.opportunity || null;
+    const created = report.created_at ? new Date(report.created_at).toLocaleString('mn-MN') : '';
+    const targetLine = opp
+      ? `<p class="review-meta">Ажил: <strong>${escapeHtml(opp.title || '')}</strong> — ${escapeHtml(org.org_name || 'Устгагдсан байгууллага')}</p>`
+      : '';
+    return `
+      <div class="review-card" data-report-id="${report.id}">
+        <div class="review-top">
+          <div>
+            <p class="review-name">
+              ${escapeHtml(org.org_name || 'Устгагдсан байгууллага')}
+              ${opp ? '<span class="report-reason-tag" style="background:#e0e7ff; color:#3730a3;">Ажил</span>' : ''}
+              <span class="report-reason-tag">${escapeHtml(reasonLabel(report.reason))}</span>
+              <span class="report-status-tag" data-status="${report.status}">${reportStatusLabel(report.status)}</span>
+            </p>
+            ${targetLine}
+            <p class="review-meta">Мэдээлсэн: ${created}</p>
+          </div>
+        </div>
+        ${report.details ? `<p class="review-about">${escapeHtml(report.details)}</p>` : ''}
+        ${org.id ? `<div class="review-links"><a href="Baiguullaga_profile_org.html?id=${encodeURIComponent(org.id)}" target="_blank" rel="noopener">👁 Байгууллагыг үзэх</a></div>` : ''}
+        <textarea class="review-notes" placeholder="Тэмдэглэл…">${escapeHtml(report.resolved_notes || '')}</textarea>
+        <div class="review-actions">${reportActionsHtml(report)}</div>
+      </div>
+    `;
+  }
+
+  function feedbackStatusLabel(status) {
+    if (status === 'read') return '👀 Уншсан';
+    if (status === 'archived') return '🗄 Архивласан';
+    return '🆕 Шинэ';
+  }
+
+  function feedbackActionsHtml(fb) {
+    if (fb.status === 'new') {
+      return `
+        <button class="pill btn-resolve" data-feedback-action="read">👀 Уншсан гэж тэмдэглэх</button>
+        <button class="pill btn-dismiss" data-feedback-action="archived">🗄 Архивлах</button>
+      `;
+    }
+    if (fb.status === 'read') {
+      return `<button class="pill btn-dismiss" data-feedback-action="archived">🗄 Архивлах</button>`;
+    }
+    return `<button class="pill btn-revert" data-feedback-action="new">↩️ Шинэ гэж тэмдэглэх</button>`;
+  }
+
+  function feedbackCardHtml(fb) {
+    const created = fb.created_at ? new Date(fb.created_at).toLocaleString('mn-MN') : '';
+    return `
+      <div class="review-card" data-feedback-id="${fb.id}">
+        <div class="review-top">
+          <div>
+            <p class="review-name">
+              ${escapeHtml(fb.name || 'Нэргүй')}
+              <span class="report-status-tag" data-status="${fb.status}">${feedbackStatusLabel(fb.status)}</span>
+            </p>
+            <p class="review-meta">${escapeHtml(fb.email || '')} · ${created}</p>
+          </div>
+        </div>
+        <p class="review-about">${escapeHtml(fb.message)}</p>
+        <div class="review-actions">${feedbackActionsHtml(fb)}</div>
+      </div>
+    `;
+  }
+
+  function renderTab() {
+    const list = document.getElementById('reviewList');
+
+    document.getElementById('countPending').textContent = `(${allOrgs.filter(o => o.verification_status === 'pending').length})`;
+    document.getElementById('countVerified').textContent = `(${allOrgs.filter(o => o.verification_status === 'verified').length})`;
+    document.getElementById('countRejected').textContent = `(${allOrgs.filter(o => o.verification_status === 'rejected').length})`;
+    document.getElementById('countReports').textContent = `(${allReports.filter(r => r.status === 'open').length})`;
+    document.getElementById('countFeedback').textContent = `(${allFeedback.filter(f => f.status === 'new').length})`;
+
+    if (activeTab === 'feedback') {
+      if (allFeedback.length === 0) {
+        list.innerHTML = '<p class="empty-state">Одоогоор ямар ч санал хүсэлт ирээгүй байна.</p>';
+        return;
+      }
+      list.innerHTML = allFeedback.map(feedbackCardHtml).join('');
+
+      list.querySelectorAll('.review-card').forEach(card => {
+        const feedbackId = card.getAttribute('data-feedback-id');
+        card.querySelectorAll('button[data-feedback-action]').forEach(btn => {
+          btn.addEventListener('click', () => handleFeedbackAction(feedbackId, btn.getAttribute('data-feedback-action')));
+        });
+      });
+      return;
+    }
+
+    if (activeTab === 'reports') {
+      if (allReports.length === 0) {
+        list.innerHTML = '<p class="empty-state">Одоогоор ямар ч мэдээлэл ирээгүй байна.</p>';
+        return;
+      }
+      list.innerHTML = allReports.map(reportCardHtml).join('');
+
+      list.querySelectorAll('.review-card').forEach(card => {
+        const reportId = card.getAttribute('data-report-id');
+        const notesEl = card.querySelector('.review-notes');
+
+        card.querySelectorAll('button[data-report-action]').forEach(btn => {
+          btn.addEventListener('click', () => handleReportAction(reportId, btn.getAttribute('data-report-action'), notesEl.value));
+        });
+      });
+      return;
+    }
+
+    const filtered = allOrgs.filter(o => o.verification_status === activeTab);
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<p class="empty-state">Энэ жагсаалтад байгууллага алга.</p>';
+      return;
+    }
+
+    list.innerHTML = filtered.map(cardHtml).join('');
+
+    list.querySelectorAll('.review-card').forEach(card => {
+      const orgId = card.getAttribute('data-org-id');
+      const notesEl = card.querySelector('.review-notes');
+
+      card.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', () => handleAction(orgId, btn.getAttribute('data-action'), notesEl.value));
+      });
+    });
+  }
+
+  async function handleAction(orgId, action, notes) {
+    const buttons = document.querySelectorAll(`[data-org-id="${orgId}"] button`);
+    buttons.forEach(b => b.disabled = true);
+
+    let result;
+    if (action === 'verify') {
+      result = await setVerification(orgId, 'verified', notes);
+    } else if (action === 'reject') {
+      result = await setVerification(orgId, 'rejected', notes);
+    } else if (action === 'revert') {
+      result = await setVerification(orgId, 'pending', notes);
+    } else if (action === 'ban') {
+      result = await setBanned(orgId, true);
+    } else if (action === 'unban') {
+      result = await setBanned(orgId, false);
+    }
+
+    if (!result) {
+      alert('Шинэчлэхэд алдаа гарлаа. RLS эрх эсвэл нэвтрэлтээ шалгана уу.');
+      buttons.forEach(b => b.disabled = false);
+      return;
+    }
+
+    await loadAllOrgs();
+  }
+
+  async function loadAllOrgs() {
+    allOrgs = await getAllOrgsForAdmin();
+    renderTab();
+  }
+
+  async function handleReportAction(reportId, status, notes) {
+    const buttons = document.querySelectorAll(`[data-report-id="${reportId}"] button`);
+    buttons.forEach(b => b.disabled = true);
+
+    const result = await resolveReport(reportId, status, notes);
+
+    if (!result) {
+      alert('Шинэчлэхэд алдаа гарлаа. RLS эрх эсвэл нэвтрэлтээ шалгана уу.');
+      buttons.forEach(b => b.disabled = false);
+      return;
+    }
+
+    await loadAllReports();
+  }
+
+  async function loadAllReports() {
+    allReports = await getAllReportsForAdmin();
+    renderTab();
+  }
+
+  async function handleFeedbackAction(feedbackId, status) {
+    const buttons = document.querySelectorAll(`[data-feedback-id="${feedbackId}"] button`);
+    buttons.forEach(b => b.disabled = true);
+
+    const result = await updateFeedbackStatus(feedbackId, status);
+
+    if (!result) {
+      alert('Шинэчлэхэд алдаа гарлаа. RLS эрх эсвэл нэвтрэлтээ шалгана уу.');
+      buttons.forEach(b => b.disabled = false);
+      return;
+    }
+
+    await loadAllFeedback();
+  }
+
+  async function loadAllFeedback() {
+    allFeedback = await getAllFeedbackForAdmin();
+    renderTab();
+  }
+
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      activeTab = tab.getAttribute('data-tab');
+      renderTab();
+    });
+  });
+
+  (async () => {
+    const session = await requireSession(); // redirects to login.html if not signed in
+    if (!session) return;
+
+    if (!(await isCurrentUserAdmin())) {
+      window.location.href = 'Main_vol.html';
+      return;
+    }
+
+    await loadAllOrgs();
+    await loadAllReports();
+    await loadAllFeedback();
+  })();
+
+  document.getElementById('logoutBtn').addEventListener('click', signOut);
+</script>
+
+</body>
+</html>

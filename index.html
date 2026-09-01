@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ХҮРТЭЭМЖ — Сайн дурын ажилтан ба байгууллагыг холбоно</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="description" content="ХҮРТЭЭМЖ нь сайн дурын ажилтнууд болон төрийн бус байгууллагуудыг холбодог платформ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Golos+Text:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Intro_s.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <img class="brand-mark" src="logo-badge.png" alt="ХҮРТЭЭМЖ лого">
+      ХҮРТЭЭМЖ
+    </a>
+    <nav>
+      <ul class="site-nav" id="siteNav">
+        <li><a href="#yaaj">Хэрхэн ажилладаг</a></li>
+        <li><a href="#burtguuleh">Бүртгүүлэх</a></li>
+        <li><a href="#tuhai">Тухай</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-link-login" href="Login.html">Нэвтрэх</a>
+      <a class="nav-cta" href="#burtguuleh">Эхлэх</a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Цэс нээх">
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <img class="knot-watermark" src="logo-badge.png" alt="" aria-hidden="true">
+
+    <div class="wrap">
+      <span class="hero-eyebrow">Сайн дурын ажил · Төрийн бус байгууллага</span>
+
+      <div class="hero-top">
+        <h1>Тусалмаар хүн. <span>Хэрэгтэй газар.</span></h1>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="Login.html">
+            Нэвтрэх
+            <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#yaaj">Хэрхэн ажилладаг</a>
+        </div>
+      </div>
+
+      <p class="hero-sub">
+        Тусламж хэрэгтэй газар, тусалмаар хүн — нэг цэг дээр.
+      </p>
+
+      <div class="horizon" aria-hidden="true">
+        <svg viewBox="0 0 1000 140" preserveAspectRatio="none">
+          <defs>
+            <path id="pathA" d="M60,110 C300,110 380,40 500,40" fill="none"/>
+            <path id="pathB" d="M940,110 C700,110 620,40 500,40" fill="none"/>
+          </defs>
+
+          <line x1="0" y1="112" x2="1000" y2="112" stroke="var(--line)" stroke-width="1"/>
+
+          <!-- volunteer nodes (left) -->
+          <circle class="pulse-dot" cx="60" cy="110" r="4" fill="var(--accent)"/>
+          <circle class="pulse-dot" cx="120" cy="112" r="3.2" fill="var(--accent)" style="animation-delay:.4s"/>
+          <circle class="pulse-dot" cx="185" cy="108" r="3.6" fill="var(--accent)" style="animation-delay:.9s"/>
+
+          <!-- organization nodes (right) -->
+          <circle class="pulse-dot" cx="940" cy="110" r="4" fill="var(--accent-2)" style="animation-delay:.2s"/>
+          <circle class="pulse-dot" cx="880" cy="112" r="3.2" fill="var(--accent-2)" style="animation-delay:.7s"/>
+          <circle class="pulse-dot" cx="815" cy="108" r="3.6" fill="var(--accent-2)" style="animation-delay:1.1s"/>
+
+          <!-- meeting point -->
+          <circle cx="500" cy="40" r="21" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.5"/>
+          <circle cx="500" cy="40" r="16" fill="#FFFFFF"/>
+          <image href="logo-badge.png" x="486" y="29" width="28" height="22"/>
+
+          <circle r="3" fill="var(--accent)" class="travel-a">
+            <animateMotion dur="4.5s" repeatCount="indefinite" begin="0s">
+              <mpath href="#pathA"/>
+            </animateMotion>
+          </circle>
+          <circle r="3" fill="var(--accent-2)" class="travel-b">
+            <animateMotion dur="4.5s" repeatCount="indefinite" begin="1.2s">
+              <mpath href="#pathB"/>
+            </animateMotion>
+          </circle>
+        </svg>
+        <div class="horizon-caption">
+          <span>Сайн дурын ажилтнууд</span>
+          <span class="mid">Холбогдох цэг</span>
+          <span>Байгууллагууд</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="wrap">
+      <div class="stat"><b id="statOrgs">120+</b><span>Идэвхтэй байгууллага</span></div>
+      <div class="stat"><b id="statVolunteers">2,400+</b><span>Бүртгэлтэй сайн дурын ажилтан</span></div>
+      <div class="stat"><b id="statProjects">60+</b><span>Үргэлжилж буй төсөл</span></div>
+    </div>
+  </section>
+
+  <section id="yaaj">
+    <div class="wrap">
+      <div class="yaaj-layout">
+        <div class="section-head">
+          <span class="kicker">Процесс</span>
+          <h2>Дөрвөн алхмаар холбогдоно</h2>
+          <p>Бүртгэлээс эхлээд бодит хамтын ажиллагаа хүртэл — платформ дундын алхмуудыг хялбарчилсан.</p>
+        </div>
+        <div class="steps">
+        <div class="step">
+          <span class="step-num">01 — Бүртгүүлэх</span>
+          <h3>Профайлаа үүсгэ</h3>
+          <p>Сонирхол, ур чадвар, чөлөөт цагаа зааж, өөрийн профайлыг хэдхэн минутад бөглөнө.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">02 — Хайлт</span>
+          <h3>Тохирсон төслийг хайх</h3>
+          <p>Байршил, чиглэл, шаардлагатай цагийн хугацаагаар шүүж, өөрт тохирох үйл хэргийг олно.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">03 — Сонгох</span>
+          <h3>Хамгийн тохирохыг сонго</h3>
+          <p>Илэрсэн сонголтуудаас өөрт хамгийн ойр, утга учиртай төслөө сонгоно.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">04 — Оролцох</span>
+          <h3>Шууд холбогдож эхэл</h3>
+          <p>Байгууллагатай шууд харилцаж, тохиролцоод ажлаа эхлүүлнэ — зуучлагч шаардлагагүй.</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="signup" id="burtguuleh">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Эхлэх</span>
+        <h2>Бүртгүүлэх</h2>
+        <p>Та хэн бэ? Доорх хоёр сонголтоос өөрт тохирохыг сонгоод бүртгэлээ эхлүүлнэ үү.</p>
+      </div>
+      <div class="signup-grid">
+        <a class="signup-card volunteer" href="volunteer_sign_up.html">
+          <span class="card-tag">Хувь хүн</span>
+          <h3>Сайн дурын ажилтан</h3>
+          <p>Цагаа зориулж, чадвараа хуваалцаж, өөрт ойрхон, утга учиртай үйл хэрэгт нэгдээрэй.</p>
+          <span class="card-go">
+            Бүртгүүлэх
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+        <a class="signup-card org" href="organization_sign_up.html">
+          <span class="card-tag">Байгууллага</span>
+          <h3>Төрийн бус байгууллага</h3>
+          <p>Төслөө байршуулж, хэрэгтэй ур чадвар бүхий сайн дурын ажилтнуудтай шууд холбогдоорой.</p>
+          <span class="card-go">
+            Бүртгэх
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="tuhai">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Тухай</span>
+        <h2>Яагаад ХҮРТЭЭМЖ вэ</h2>
+        <p>
+          Бид сайн дурын ажлыг илүү хүртээмжтэй, ил тод болгохыг зорьдог. Платформ дээрх
+          мэдээлэл нээлттэй бөгөөд бүртгэл үнэ төлбөргүй — зорилго нь зөвхөн зөв хүмүүсийг
+          зөв газарт хүргэх явдал юм.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <span>© 2026 ХҮРТЭЭМЖ</span>
+      <ul class="footer-links">
+        <li><a href="#tuhai">Тухай</a></li>
+        <li><a href="#yaaj">Хэрхэн ажилладаг</a></li>
+        <li><a href="#burtguuleh">Бүртгүүлэх</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  var header = document.querySelector('.site-header');
+  var toggle = document.getElementById('menuToggle');
+  var nav = document.getElementById('siteNav');
+
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+  }, { passive: true });
+
+  toggle.addEventListener('click', function(){
+    var open = nav.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', open);
+    toggle.setAttribute('aria-label', open ? 'Цэс хаах' : 'Цэс нээх');
+  });
+
+  nav.addEventListener('click', function(e){
+    if (e.target.tagName === 'A'){
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Цэс нээх');
+    }
+  });
+
+  // ---------------------------------------------------------------
+  // Live platform stats. getPlatformStats() comes from supabase-client.js
+  // (the same helper Login.html and Intro.html already use) and returns
+  // { volunteerCount, organizationCount, totalHours }. The ongoing-project
+  // count below isn't part of that helper yet — it assumes an
+  // "opportunities" table with a "status" column set to 'active'. If your
+  // schema uses a different name, adjust the query below (or add the
+  // field to getPlatformStats() itself) and this will pick it up.
+  // Every call is wrapped so a missing table/column just leaves that
+  // number at its current placeholder instead of breaking the page.
+  // ---------------------------------------------------------------
+
+  function formatThousands(n) {
+    return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  (async () => {
+    if (typeof getPlatformStats !== 'function' || typeof supabaseClient === 'undefined') return;
+
+    try {
+      const stats = await getPlatformStats();
+      if (stats) {
+        if (typeof stats.organizationCount === 'number') {
+          document.getElementById('statOrgs').textContent = `${formatThousands(stats.organizationCount)}+`;
+        }
+        if (typeof stats.volunteerCount === 'number') {
+          document.getElementById('statVolunteers').textContent = `${formatThousands(stats.volunteerCount)}+`;
+        }
+      }
+    } catch (err) {
+      console.error('getPlatformStats failed:', err);
+    }
+
+    try {
+      const { count: projectCount, error: projErr } = await supabaseClient
+        .from('opportunities')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'active');
+      if (!projErr && typeof projectCount === 'number') {
+        document.getElementById('statProjects').textContent = `${formatThousands(projectCount)}+`;
+      }
+    } catch (err) {
+      console.error('project stat failed:', err);
+    }
+  })();
+</script>
+</body>
+</html>
